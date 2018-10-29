@@ -1,0 +1,108 @@
+/* eslint-disable react/no-string-refs */
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Redirect, Route, Switch } from 'react-router-dom'
+// creates a beautiful scrollbar
+import PerfectScrollbar from 'perfect-scrollbar'
+import 'perfect-scrollbar/css/perfect-scrollbar.css'
+// @material-ui/core components
+import withStyles from '@material-ui/core/styles/withStyles'
+// core components
+import Header from 'components/Header/Header.jsx'
+import Footer from 'components/Footer/Footer.jsx'
+import Sidebar from 'components/Sidebar/Sidebar.jsx'
+
+import dashboardRoutes from 'routes/dashboard.jsx'
+
+import dashboardStyle from 'assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx'
+
+import image from 'assets/img/sidebar-4.jpg'
+import logo from 'assets/img/reactlogo.png'
+
+const switchRoutes = (
+  <Switch>
+    {dashboardRoutes.map((prop, key) => {
+      if (prop.redirect) return <Redirect from={prop.path} to={prop.to} key={key} />
+      return <Route path={prop.path} component={prop.component} key={key} />
+    })}
+  </Switch>
+)
+
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      mobileOpen: false,
+    }
+    this.resizeFunction = this.resizeFunction.bind(this)
+  }
+
+  componentDidMount() {
+    if (navigator.platform.indexOf('Win') > -1) {
+      // eslint-disable-next-line no-new
+      new PerfectScrollbar(this.refs.mainPanel)
+    }
+    window.addEventListener('resize', this.resizeFunction)
+  }
+
+  componentDidUpdate(e) {
+    const { mobileOpen } = this.state
+    if (e.history.location.pathname !== e.location.pathname) {
+      this.refs.mainPanel.scrollTop = 0
+      if (mobileOpen) {
+        this.setState({ mobileOpen: false })
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resizeFunction)
+  }
+
+  handleDrawerToggle = () => {
+    const { mobileOpen } = this.state
+    this.setState({ mobileOpen: !mobileOpen })
+  }
+
+  resizeFunction() {
+    if (window.innerWidth >= 960) {
+      this.setState({ mobileOpen: false })
+    }
+  }
+
+  render() {
+    const { classes, ...rest } = this.props
+    const { mobileOpen } = this.state
+    return (
+      <div className={classes.wrapper}>
+        <Sidebar
+          routes={dashboardRoutes}
+          logoText="Fit trainer"
+          logo={logo}
+          image={image}
+          handleDrawerToggle={this.handleDrawerToggle}
+          open={mobileOpen}
+          color="blue"
+          {...rest}
+        />
+        <div className={classes.mainPanel} ref="mainPanel">
+          <Header
+            routes={dashboardRoutes}
+            handleDrawerToggle={this.handleDrawerToggle}
+            {...rest}
+          />
+          <div className={classes.content}>
+            <div className={classes.container}>{switchRoutes}</div>
+          </div>
+          <Footer routes={dashboardRoutes} />
+        </div>
+      </div>
+    )
+  }
+}
+
+App.propTypes = {
+  classes: PropTypes.object.isRequired,
+}
+
+export default withStyles(dashboardStyle)(App)
