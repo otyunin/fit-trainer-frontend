@@ -70,12 +70,15 @@ class SignIn extends React.Component {
                     <GridItem xs={12} sm={12} md={6}>
                       <CustomInput
                         labelText="Email address"
-                        id="email"
+                        id="email-address"
+                        onChange={this.handleChange}
                         formControlProps={{
                           fullWidth: true,
+                        }}
+                        inputProps={{
                           name: 'email',
-                          value: email,
                           onChange: this.handleChange,
+                          value: email,
                         }}
                       />
                     </GridItem>
@@ -85,12 +88,13 @@ class SignIn extends React.Component {
                       <CustomInput
                         labelText="Password"
                         id="password"
-                        name="password"
                         formControlProps={{
                           fullWidth: true,
+                        }}
+                        inputProps={{
                           name: 'password',
-                          value: password,
                           onChange: this.handleChange,
+                          value: password,
                         }}
                       />
                     </GridItem>
