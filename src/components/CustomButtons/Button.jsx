@@ -56,7 +56,7 @@ RegularButton.propTypes = {
     'white',
     'transparent',
   ]),
-  size: PropTypes.oneOf(['sm', 'lg']),
+  size: PropTypes.oneOf(['sm', 'lg', 'md']),
   simple: PropTypes.bool,
   round: PropTypes.bool,
   disabled: PropTypes.bool,
@@ -70,8 +70,8 @@ RegularButton.propTypes = {
 
 RegularButton.defaultProps = {
   color: 'primary',
-  size: 'sm',
-  simple: true,
+  size: 'md',
+  simple: false,
   round: false,
   disabled: false,
   block: false,
