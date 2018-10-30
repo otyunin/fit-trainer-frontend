@@ -109,6 +109,7 @@ const SignUp = ({ ...props }) => {
                       }}
                       inputProps={{
                         name: 'password',
+                        type: 'password',
                       }}
                     />
                   </GridItem>
@@ -133,6 +134,7 @@ const SignUp = ({ ...props }) => {
                       }}
                       inputProps={{
                         name: 'repeatPassword',
+                        type: 'password',
                       }}
                     />
                   </GridItem>

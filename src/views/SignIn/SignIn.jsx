@@ -108,6 +108,7 @@ const SignIn = ({ ...props }) => {
                       }}
                       inputProps={{
                         name: 'password',
+                        type: 'password',
                       }}
                     />
                   </GridItem>
