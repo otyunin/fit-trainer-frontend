@@ -1,5 +1,8 @@
 {
   "name": "material-dashboard-react",
+  "config": {
+    "port": "3000"
+  },
   "version": "1.5.0",
   "description": "Material Dashboard React. Coded by Creative Tim",
   "private": false,

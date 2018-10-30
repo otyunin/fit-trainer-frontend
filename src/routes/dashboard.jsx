@@ -1,10 +1,12 @@
 // @material-ui/icons
-import { Person, Dashboard, Receipt } from '@material-ui/icons'
+import { Dashboard, Person, Receipt } from '@material-ui/icons'
 // core components/views
 import DashboardPage from 'views/Dashboard/Dashboard'
 import SignInPage from 'views/SignIn/SignIn'
 import SignUpPage from 'views/SignUp/SignUp'
 import CreateExercise from 'views/CreateExercise/CreateExercise'
+import VerifyEmailPage from 'views/VerifyEmail/VerifyEmail'
+import CreateWorkoutPage from 'views/CreateWorkout/CreateWorkout'
 
 const dashboardRoutes = [
   {
@@ -29,7 +31,22 @@ const dashboardRoutes = [
     component: SignUpPage,
   },
   {
-    path: '/exercise/create',
+    path: '/verify-email',
+    sidebarName: 'Email verification',
+    navbarName: 'Email verification',
+    icon: Person,
+    component: VerifyEmailPage,
+  },
+  {
+    path: '/create-workout',
+    sidebarName: 'CreateWorkout',
+    navbarName: 'CreateWorkout',
+    icon: Receipt,
+    component: CreateWorkoutPage,
+  },
+
+  {
+    path: '/create-exercise',
     sidebarName: 'New Excercise',
     navbarName: 'New Excercise',
     icon: Receipt,
