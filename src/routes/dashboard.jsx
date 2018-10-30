@@ -7,7 +7,8 @@ import DashboardPage from 'views/Dashboard/Dashboard'
 import SignInPage from 'views/SignIn/SignIn'
 import SignUpPage from 'views/SignUp/SignUp'
 import VerifyEmailPage from 'views/VerifyEmail/VerifyEmail'
-import CreateExercise from 'views/CreateExercise/CreateExercise'
+import CreateExercisePage from 'views/CreateExercise/CreateExercise'
+import EditExercisesPage from 'views/EditExercises/EditExercises'
 import CreateWorkoutPage from 'views/CreateWorkout/CreateWorkout'
 
 const dashboardRoutes = [
@@ -51,7 +52,14 @@ const dashboardRoutes = [
     sidebarName: 'New Excercise',
     navbarName: 'New Excercise',
     icon: Receipt,
-    component: CreateExercise,
+    component: CreateExercisePage,
+  },
+  {
+    path: '/edit-exercises',
+    sidebarName: 'Edit Excercises',
+    navbarName: 'Edit Excercises',
+    icon: Receipt,
+    component: EditExercisesPage,
   },
   { redirect: true, path: '/', to: '/dashboard', navbarName: 'Redirect' },
 ]
