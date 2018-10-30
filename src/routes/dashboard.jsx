@@ -1,9 +1,10 @@
 // @material-ui/icons
-import { Dashboard, Person, Receipt } from '@material-ui/icons'
+import { Person, Dashboard, Receipt } from '@material-ui/icons'
 // core components/views
 import DashboardPage from 'views/Dashboard/Dashboard'
 import SignInPage from 'views/SignIn/SignIn'
 import SignUpPage from 'views/SignUp/SignUp'
+import CreateExercise from 'views/CreateExercise/CreateExercise'
 import VerifyEmailPage from 'views/VerifyEmail/VerifyEmail'
 import CreateWorkoutPage from 'views/CreateWorkout/CreateWorkout'
 
@@ -44,6 +45,13 @@ const dashboardRoutes = [
     component: CreateWorkoutPage,
   },
 
+  {
+    path: '/create-exercise',
+    sidebarName: 'New Excercise',
+    navbarName: 'New Excercise',
+    icon: Receipt,
+    component: CreateExercise,
+  },
   { redirect: true, path: '/', to: '/dashboard', navbarName: 'Redirect' },
 ]
 

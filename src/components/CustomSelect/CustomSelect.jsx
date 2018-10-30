@@ -6,11 +6,12 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select/Select'
+import MenuItem from '@material-ui/core/MenuItem/MenuItem'
 // @material-ui/icons
 import Clear from '@material-ui/icons/Clear'
 import Check from '@material-ui/icons/Check'
 // core components
-import customInputStyle from 'assets/jss/material-dashboard-react/components/customInputStyle.jsx'
+import customSelectStyle from 'assets/jss/material-dashboard-react/components/customSelectStyle.jsx'
 
 class CustomSelect extends React.Component {
   state = {
@@ -18,9 +19,11 @@ class CustomSelect extends React.Component {
   }
 
   componentDidMount() {
-    const { children } = this.props
+    const { selectData } = this.props
 
-    this.setState({ selectedOption: children[0][0].props.value })
+    if (selectData.length > 0) {
+      this.setState({ selectedOption: selectData[0] })
+    }
   }
 
   handleChange = event => {
@@ -37,7 +40,7 @@ class CustomSelect extends React.Component {
       inputProps,
       error,
       success,
-      children,
+      selectData,
     } = this.props
 
     const { selectedOption } = this.state
@@ -79,7 +82,24 @@ class CustomSelect extends React.Component {
           id={id}
           {...inputProps}
         >
-          {children}
+          {selectData.length > 0 ? (
+            selectData.map((option, key) => [
+              <MenuItem
+                key={key}
+                className={classes.dropdownItem}
+                value={option}
+              >
+                {option}
+              </MenuItem>,
+            ])
+          ) : (
+            <MenuItem
+              className={classes.dropdownItem}
+              value={selectedOption}
+            >
+              None
+            </MenuItem>
+          )}
         </Select>
         {error ? (
           <Clear className={`${classes.feedback} ${classes.labelRootError}`} />
@@ -100,6 +120,7 @@ CustomSelect.propTypes = {
   formControlProps: PropTypes.object,
   error: PropTypes.bool,
   success: PropTypes.bool,
+  selectData: PropTypes.array,
 }
 
 CustomSelect.defaultProps = {
@@ -110,6 +131,7 @@ CustomSelect.defaultProps = {
   formControlProps: {},
   error: false,
   success: false,
+  selectData: [],
 }
 
-export default withStyles(customInputStyle)(CustomSelect)
+export default withStyles(customSelectStyle)(CustomSelect)

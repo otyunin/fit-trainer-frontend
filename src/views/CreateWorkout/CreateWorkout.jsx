@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 // @material-ui/core
 import withStyles from '@material-ui/core/styles/withStyles'
 import Grid from '@material-ui/core/Grid/Grid'
-import MenuItem from '@material-ui/core/MenuItem/MenuItem'
 import FormLabel from '@material-ui/core/FormLabel/FormLabel'
 // @material-ui/icons
 import { ArrowDownward, ArrowUpward, Cancel } from '@material-ui/icons'
@@ -19,14 +18,14 @@ import Table from 'components/Table/Table'
 import CustomSelect from 'components/CustomSelect/CustomSelect'
 import CustomInput from 'components/CustomInput/CustomInput'
 
-import dropdownStyle from 'assets/jss/material-dashboard-react/dropdownStyle'
+import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/createWorkoutStyle'
 
 const CreateWorkout = ({ classes }) => (
   <div>
     <GridContainer>
       <GridItem xs={12} sm={12} md={10}>
         <Card>
-          <CardHeader color="primary">
+          <CardHeader color="primary" className={classes.cardHeader}>
             <h4 className={classes.cardTitleWhite}>New workout</h4>
           </CardHeader>
           <CardBody>
@@ -39,6 +38,7 @@ const CreateWorkout = ({ classes }) => (
                   <CustomSelect
                     labelText="Exercise name"
                     id="exercise"
+                    selectData={[1, 2, 3, 4].map(valueSelect => `Exercise #${valueSelect}`)}
                     inputProps={{
                       name: 'exercise',
                     }}
@@ -46,18 +46,7 @@ const CreateWorkout = ({ classes }) => (
                     formControlProps={{
                       fullWidth: true,
                     }}
-                  >
-                    {[1, 2, 3, 4].map((valueSelect, index) => [
-                      <MenuItem
-                        key={index}
-                        onClick={this.handleClose}
-                        className={classes.dropdownItem}
-                        value={`Exercise #${valueSelect}`}
-                      >
-                        {`Exercise #${valueSelect}`}
-                      </MenuItem>,
-                    ])}
-                  </CustomSelect>,
+                  />,
                   <CustomInput
                     labelText="Repeats"
                     id="repeats"
@@ -107,4 +96,4 @@ CreateWorkout.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(dropdownStyle)(CreateWorkout)
+export default withStyles(createWorkoutStyle)(CreateWorkout)
