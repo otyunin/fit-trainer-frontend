@@ -2,7 +2,8 @@
 import { Person, Dashboard } from '@material-ui/icons'
 // core components/views
 import DashboardPage from 'views/Dashboard/Dashboard'
-import SignIn from 'views/SignIn/SignIn'
+import SignInPage from 'views/SignIn/SignIn'
+import SignUpPage from 'views/SignUp/SignUp'
 
 const dashboardRoutes = [
   {
@@ -14,10 +15,17 @@ const dashboardRoutes = [
   },
   {
     path: '/signin',
-    sidebarName: 'Sign In',
-    navbarName: 'Sign In',
+    sidebarName: 'Sign in',
+    navbarName: 'Sign in',
     icon: Person,
-    component: SignIn,
+    component: SignInPage,
+  },
+  {
+    path: '/signup',
+    sidebarName: 'Sign up',
+    navbarName: 'Sign up',
+    icon: Person,
+    component: SignUpPage,
   },
   { redirect: true, path: '/', to: '/dashboard', navbarName: 'Redirect' },
 ]
