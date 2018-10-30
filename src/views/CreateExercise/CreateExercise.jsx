@@ -10,7 +10,6 @@ import CardHeader from 'components/Card/CardHeader.jsx'
 import CardBody from 'components/Card/CardBody.jsx'
 import CardFooter from 'components/Card/CardFooter.jsx'
 import CustomSelect from 'components/CustomSelect/CustomSelect'
-import MenuItem from '@material-ui/core/MenuItem/MenuItem'
 
 import createExerciseStyle from 'assets/jss/material-dashboard-react/views/createExerciseStyle'
 
@@ -62,6 +61,7 @@ class CreateExercise extends React.Component {
                       <CustomSelect
                         labelText="Measurement type"
                         id="measurement-type"
+                        // selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilimeters']}
                         inputProps={{
                           name: 'measurementType',
                         }}
@@ -69,18 +69,7 @@ class CreateExercise extends React.Component {
                         formControlProps={{
                           fullWidth: true,
                         }}
-                      >
-                        {['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilimeters'].map((value, index) => [
-                          <MenuItem
-                            key={index}
-                            onClick={this.handleClose}
-                            className={classes.dropdownItem}
-                            value={value}
-                          >
-                            {value}
-                          </MenuItem>,
-                        ])}
-                      </CustomSelect>
+                      />
                     </GridItem>
                   </GridContainer>
                 </CardBody>
