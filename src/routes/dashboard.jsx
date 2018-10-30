@@ -40,13 +40,6 @@ const dashboardRoutes = [
     component: VerifyEmailPage,
   },
   {
-    path: '/create-workout',
-    sidebarName: 'Create Workout',
-    navbarName: 'Create Workout',
-    icon: Receipt,
-    component: CreateWorkoutPage,
-  },
-  {
     path: '/create-exercise',
     sidebarName: 'New Excercise',
     navbarName: 'New Excercise',
@@ -59,6 +52,13 @@ const dashboardRoutes = [
     navbarName: 'Edit Excercises',
     icon: Receipt,
     component: EditExercisesPage,
+  },
+  {
+    path: '/create-workout',
+    sidebarName: 'New Workout',
+    navbarName: 'New Workout',
+    icon: Receipt,
+    component: CreateWorkoutPage,
   },
   {
     path: '/edit-workout',
