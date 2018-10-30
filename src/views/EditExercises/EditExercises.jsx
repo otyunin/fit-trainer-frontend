@@ -24,7 +24,7 @@ const EditExercises = ({ classes }) => (
       <GridItem xs={12} sm={12} md={10}>
         <Card>
           <CardHeader color="primary" className={classes.cardHeader}>
-            <h4 className={classes.cardTitleWhite}>New workout</h4>
+            <h4 className={classes.cardTitleWhite}>Edit exercises</h4>
           </CardHeader>
           <CardBody>
             <Grid container alignItems="center">
