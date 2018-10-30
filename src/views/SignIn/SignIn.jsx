@@ -12,6 +12,7 @@ import CardHeader from 'components/Card/CardHeader.jsx'
 import CardBody from 'components/Card/CardBody.jsx'
 import CardFooter from 'components/Card/CardFooter.jsx'
 import Danger from 'components/Typography/Danger'
+import { connect } from 'react-redux'
 import formik from './formik'
 
 const styles = theme => ({
@@ -143,6 +144,18 @@ SignIn.propTypes = {
   isSubmitting: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleBlur: PropTypes.func.isRequired,
+  user: PropTypes.object,
+  error: PropTypes.string,
 }
 
-export default formik(withStyles(styles)(SignIn))
+SignIn.defaultProps = {
+  user: null,
+  error: '',
+}
+
+const mapStateToProps = store => ({
+  user: store.user,
+  error: store.errorLogin,
+})
+
+export default connect(mapStateToProps)(formik(withStyles(styles)(SignIn)))
