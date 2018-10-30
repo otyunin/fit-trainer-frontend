@@ -4,10 +4,11 @@ import { Person, Dashboard, Receipt } from '@material-ui/icons'
 import DashboardPage from 'views/Dashboard/Dashboard'
 import SignInPage from 'views/SignIn/SignIn'
 import SignUpPage from 'views/SignUp/SignUp'
+import VerifyEmailPage from 'views/VerifyEmail/VerifyEmail'
 import CreateExercisePage from 'views/CreateExercise/CreateExercise'
 import EditExercisesPage from 'views/EditExercises/EditExercises'
-import VerifyEmailPage from 'views/VerifyEmail/VerifyEmail'
 import CreateWorkoutPage from 'views/CreateWorkout/CreateWorkout'
+import EditWorkoutPage from 'views/EditWorkout/EditWorkout'
 
 const dashboardRoutes = [
   {
@@ -40,8 +41,8 @@ const dashboardRoutes = [
   },
   {
     path: '/create-workout',
-    sidebarName: 'CreateWorkout',
-    navbarName: 'CreateWorkout',
+    sidebarName: 'Create Workout',
+    navbarName: 'Create Workout',
     icon: Receipt,
     component: CreateWorkoutPage,
   },
@@ -58,6 +59,13 @@ const dashboardRoutes = [
     navbarName: 'Edit Excercises',
     icon: Receipt,
     component: EditExercisesPage,
+  },
+  {
+    path: '/edit-workout',
+    sidebarName: 'Edit Workout',
+    navbarName: 'Edit Workout',
+    icon: Receipt,
+    component: EditWorkoutPage,
   },
   { redirect: true, path: '/', to: '/dashboard', navbarName: 'Redirect' },
 ]
