@@ -97,3 +97,4 @@ CreateWorkout.propTypes = {
 }
 
 export default withStyles(createWorkoutStyle)(CreateWorkout)
+
