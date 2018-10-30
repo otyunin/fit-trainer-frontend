@@ -18,14 +18,14 @@ import Table from 'components/Table/Table'
 import CustomSelect from 'components/CustomSelect/CustomSelect'
 import CustomInput from 'components/CustomInput/CustomInput'
 
-import dropdownStyle from 'assets/jss/material-dashboard-react/dropdownStyle'
+import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/createWorkoutStyle'
 
 const CreateWorkout = ({ classes }) => (
   <div>
     <GridContainer>
       <GridItem xs={12} sm={12} md={10}>
         <Card>
-          <CardHeader color="primary">
+          <CardHeader color="primary" className={classes.cardHeader}>
             <h4 className={classes.cardTitleWhite}>New workout</h4>
           </CardHeader>
           <CardBody>
@@ -96,4 +96,5 @@ CreateWorkout.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(dropdownStyle)(CreateWorkout)
+export default withStyles(createWorkoutStyle)(CreateWorkout)
+

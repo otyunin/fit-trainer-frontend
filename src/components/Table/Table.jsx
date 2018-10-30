@@ -65,7 +65,7 @@ CustomTable.propTypes = {
 }
 
 CustomTable.defaultProps = {
-  tableHead: [],
+  tableHead: undefined,
   tableData: [],
 }
 
