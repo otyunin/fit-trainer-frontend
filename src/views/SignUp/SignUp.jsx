@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
+import { ErrorMessage, Form } from 'formik'
+import { Link } from 'react-router-dom'
 import GridItem from 'components/Grid/GridItem.jsx'
 import GridContainer from 'components/Grid/GridContainer.jsx'
 import CustomInput from 'components/CustomInput/CustomInput.jsx'
@@ -9,9 +11,10 @@ import Card from 'components/Card/Card.jsx'
 import CardHeader from 'components/Card/CardHeader.jsx'
 import CardBody from 'components/Card/CardBody.jsx'
 import CardFooter from 'components/Card/CardFooter.jsx'
-import { Link } from 'react-router-dom'
+import Danger from 'components/Typography/Danger'
+import formik from './formik'
 
-const styles = {
+const styles = theme => ({
   cardCategoryWhite: {
     color: 'rgba(255,255,255,.62)',
     margin: '0',
@@ -35,107 +38,135 @@ const styles = {
   },
   errorMessage: {
     marginTop: '27px',
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 0,
+    },
   },
-}
+})
 
-class SignUp extends React.Component {
-  state = {
-    email: '',
-    password: '',
-    repeatPassword: '',
-  }
+const SignUp = ({ ...props }) => {
+  const {
+    classes,
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    handleChange,
+    handleBlur,
+  } = props
 
-  handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
+  const errorEmail = errors.email && touched.email
+  const errorPassword = errors.password && touched.password
+  const errorRepeatPassword = errors.repeatPassword && touched.repeatPassword
 
-  handleSubmit = (event) => {
-    event.preventDefault()
-  }
-
-  render() {
-    const { classes } = this.props
-    const { email, password, repeatPassword } = this.state
-    return (
-      <div>
-        <GridContainer>
-          <GridItem xs={12} sm={12} md={8}>
-            <form onSubmit={this.handleSubmit}>
-              <Card>
-                <CardHeader color="primary">
-                  <h4 className={classes.cardTitleWhite}>Register with Fit Trainer App</h4>
-                  <p className={classes.cardCategoryWhite}>Please, enter your email and password</p>
-                </CardHeader>
-                <CardBody>
-                  <GridContainer alignItems="center">
-                    <GridItem xs={12} sm={12} md={6}>
-                      <CustomInput
-                        labelText="Email address"
-                        id="email-address"
-                        onChange={this.handleChange}
-                        formControlProps={{
-                          fullWidth: true,
-                        }}
-                        inputProps={{
-                          name: 'email',
-                          onChange: this.handleChange,
-                          value: email,
-                        }}
-                      />
-                    </GridItem>
-                  </GridContainer>
-                  <GridContainer alignItems="center">
-                    <GridItem xs={12} sm={12} md={6}>
-                      <CustomInput
-                        labelText="Password"
-                        id="password"
-                        formControlProps={{
-                          fullWidth: true,
-                        }}
-                        inputProps={{
-                          name: 'password',
-                          onChange: this.handleChange,
-                          value: password,
-                        }}
-                      />
-                    </GridItem>
-                  </GridContainer>
-                  <GridContainer alignItems="center">
-                    <GridItem xs={12} sm={12} md={6}>
-                      <CustomInput
-                        labelText="Repeat password"
-                        id="repeat-password"
-                        formControlProps={{
-                          fullWidth: true,
-                        }}
-                        inputProps={{
-                          name: 'repeatPassword',
-                          onChange: this.handleChange,
-                          value: repeatPassword,
-                        }}
-                      />
-                    </GridItem>
-                  </GridContainer>
-                </CardBody>
-                <CardFooter className={classes.cardActions}>
-                  <Button color="primary" type="submit">
-                    Sign up
-                  </Button>
-                  <Link to="/signin" color="primary">
-                    already have an account? sign-in
-                  </Link>
-                </CardFooter>
-              </Card>
-            </form>
-          </GridItem>
-        </GridContainer>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={8}>
+          <Form>
+            <Card>
+              <CardHeader color="primary">
+                <h4 className={classes.cardTitleWhite}>Register with Fit Trainer App</h4>
+                <p className={classes.cardCategoryWhite}>Please, enter your email and password</p>
+              </CardHeader>
+              <CardBody>
+                <GridContainer alignItems="center">
+                  <GridItem xs={12} sm={12} md={6}>
+                    <CustomInput
+                      labelText="Email address"
+                      id="email-address"
+                      error={errorEmail}
+                      success={!!(!errorEmail && values.email)}
+                      formControlProps={{
+                        fullWidth: true,
+                        value: values.email,
+                        onChange: handleChange,
+                        onBlur: handleBlur,
+                      }}
+                      inputProps={{
+                        name: 'email',
+                      }}
+                    />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <div className={classes.errorMessage}>
+                      <ErrorMessage component={Danger} name="email" />
+                    </div>
+                  </GridItem>
+                </GridContainer>
+                <GridContainer alignItems="center">
+                  <GridItem xs={12} sm={12} md={6}>
+                    <CustomInput
+                      labelText="Password"
+                      id="password"
+                      error={errorPassword}
+                      success={!!(!errorPassword && values.password)}
+                      formControlProps={{
+                        fullWidth: true,
+                        value: values.email,
+                        onChange: handleChange,
+                        onBlur: handleBlur,
+                      }}
+                      inputProps={{
+                        name: 'password',
+                      }}
+                    />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <div className={classes.errorMessage}>
+                      <ErrorMessage component={Danger} name="password" />
+                    </div>
+                  </GridItem>
+                </GridContainer>
+                <GridContainer alignItems="center">
+                  <GridItem xs={12} sm={12} md={6}>
+                    <CustomInput
+                      labelText="Repeat password"
+                      id="repeat-password"
+                      error={errorRepeatPassword}
+                      success={!!(!errorRepeatPassword && values.repeatPassword)}
+                      formControlProps={{
+                        fullWidth: true,
+                        value: values.repeatPassword,
+                        onChange: handleChange,
+                        onBlur: handleBlur,
+                      }}
+                      inputProps={{
+                        name: 'repeatPassword',
+                      }}
+                    />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <div className={classes.errorMessage}>
+                      <ErrorMessage component={Danger} name="repeatPassword" />
+                    </div>
+                  </GridItem>
+                </GridContainer>
+              </CardBody>
+              <CardFooter className={classes.cardActions}>
+                <Button color="primary" type="submit" disabled={isSubmitting}>
+                  Sign up
+                </Button>
+                <Link to="/signin" color="primary">
+                  already have an account? sign-in
+                </Link>
+              </CardFooter>
+            </Card>
+          </Form>
+        </GridItem>
+      </GridContainer>
+    </div>
+  )
 }
 
 SignUp.propTypes = {
   classes: PropTypes.object.isRequired,
+  values: PropTypes.object.isRequired,
+  touched: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleBlur: PropTypes.func.isRequired,
 }
 
-export default withStyles(styles)(SignUp)
+export default formik(withStyles(styles)(SignUp))
