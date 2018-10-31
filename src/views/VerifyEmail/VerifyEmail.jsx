@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
+import { ErrorOutline } from '@material-ui/icons'
 import { connect } from 'react-redux'
 import GridItem from 'components/Grid/GridItem.jsx'
 import GridContainer from 'components/Grid/GridContainer.jsx'
@@ -10,8 +11,11 @@ import Card from 'components/Card/Card.jsx'
 import CardHeader from 'components/Card/CardHeader.jsx'
 import CardBody from 'components/Card/CardBody.jsx'
 import CardFooter from 'components/Card/CardFooter.jsx'
+import Snackbar from 'components/Snackbar/Snackbar'
 import { NavLink } from 'react-router-dom'
 import { verifyEmail } from 'redux/actions/auth.action'
+
+import { push } from 'connected-react-router'
 
 const styles = {
   cardCategoryWhite: {
@@ -44,6 +48,7 @@ class VerifyEmail extends React.Component {
   state = {
     email: '',
     verificationCode: '',
+    open: false,
   }
 
   componentDidMount() {
@@ -52,15 +57,21 @@ class VerifyEmail extends React.Component {
   }
 
   handleSubmit = (event) => {
-    const { dispatch } = this.props
+    const { dispatch, error } = this.props
     event.preventDefault()
     dispatch(verifyEmail(this.state))
+    if (error) {
+      this.setState({ open: true })
+    } else dispatch(push('/'))
+  }
 
+  handleClose = () => {
+    this.setState({ open: false })
   }
 
   render() {
-    const { classes } = this.props
-    const { email, verificationCode } = this.state
+    const { classes, error } = this.props
+    const { email, verificationCode, open } = this.state
     return (
       <div>
         <GridContainer>
@@ -115,6 +126,15 @@ class VerifyEmail extends React.Component {
               </Card>
             </form>
           </GridItem>
+          <Snackbar
+            place="tc"
+            color="danger"
+            icon={ErrorOutline}
+            message={error || ''}
+            open={open}
+            closeNotification={this.handleClose}
+            close
+          />
         </GridContainer>
       </div>
     )
@@ -125,10 +145,16 @@ VerifyEmail.propTypes = {
   classes: PropTypes.object.isRequired,
   match: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
+  error: PropTypes.string,
 }
 
 VerifyEmail.defaultProps = {
+  error: '',
   match: {},
 }
 
-export default connect()(withStyles(styles)(VerifyEmail))
+const mapStateToProps = store => ({
+  error: store.errorVerify,
+})
+
+export default connect(mapStateToProps)(withStyles(styles)(VerifyEmail))

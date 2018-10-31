@@ -18,13 +18,17 @@ const formik = withFormik({
       .matches(/^[a-zA-Z0-9]{6,30}$/, 'Password contains invalid characters')
       .required('Password is required'),
   }),
-  handleSubmit: (values, { props, setSubmitting }) => {
+  handleSubmit: (values, { props, setSubmitting, setStatus }) => {
     props.dispatch(signIn(values))
       .then(() => {
         setSubmitting(false)
         props.dispatch(push('/'))
       })
-      .catch(() => setSubmitting(false))
+      .catch(() => {
+        setStatus({ open: true })
+        setTimeout(() => setStatus({ open: false }), 6000)
+        setSubmitting(false)
+      })
   },
   displayName: 'SignIn',
 })

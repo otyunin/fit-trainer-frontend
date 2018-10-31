@@ -50,7 +50,7 @@ const auth = (state = initialState, { type, payload }) => {
     case SIGN_UP_REJECTED:
       return {
         ...state,
-        errorRegister: null,
+        errorRegister: payload,
         loading: false,
       }
 
