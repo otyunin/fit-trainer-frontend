@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
+import { connect } from 'react-redux'
 import GridItem from 'components/Grid/GridItem.jsx'
 import GridContainer from 'components/Grid/GridContainer.jsx'
 import CustomInput from 'components/CustomInput/CustomInput.jsx'
@@ -10,6 +11,7 @@ import CardHeader from 'components/Card/CardHeader.jsx'
 import CardBody from 'components/Card/CardBody.jsx'
 import CardFooter from 'components/Card/CardFooter.jsx'
 import { NavLink } from 'react-router-dom'
+import { verifyEmail } from 'redux/actions/auth.action'
 
 const styles = {
   cardCategoryWhite: {
@@ -39,12 +41,26 @@ const styles = {
 }
 
 class VerifyEmail extends React.Component {
+  state = {
+    email: '',
+    verificationCode: '',
+  }
+
+  componentDidMount() {
+    const { params } = this.props.match
+    this.setState({ email: params.email, verificationCode: params.verificationCode })
+  }
+
   handleSubmit = (event) => {
+    const { dispatch } = this.props
     event.preventDefault()
+    dispatch(verifyEmail(this.state))
+
   }
 
   render() {
     const { classes } = this.props
+    const { email, verificationCode } = this.state
     return (
       <div>
         <GridContainer>
@@ -69,6 +85,9 @@ class VerifyEmail extends React.Component {
                           fullWidth: true,
                           disabled: true,
                         }}
+                        inputProps={{
+                          value: email,
+                        }}
                       />
                     </GridItem>
                   </GridContainer>
@@ -80,6 +99,10 @@ class VerifyEmail extends React.Component {
                         formControlProps={{
                           fullWidth: true,
                           disabled: true,
+                          value: verificationCode,
+                        }}
+                        inputProps={{
+                          value: verificationCode,
                         }}
                       />
                     </GridItem>
@@ -100,6 +123,12 @@ class VerifyEmail extends React.Component {
 
 VerifyEmail.propTypes = {
   classes: PropTypes.object.isRequired,
+  match: PropTypes.object,
+  dispatch: PropTypes.func.isRequired,
 }
 
-export default withStyles(styles)(VerifyEmail)
+VerifyEmail.defaultProps = {
+  match: {},
+}
+
+export default connect()(withStyles(styles)(VerifyEmail))

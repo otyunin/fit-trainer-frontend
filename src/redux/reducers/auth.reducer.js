@@ -4,7 +4,7 @@ import {
   SIGN_IN_REJECTED,
   SIGN_UP_FULFILLED,
   SIGN_UP_PENDING,
-  SIGN_UP_REJECTED,
+  SIGN_UP_REJECTED, VERIFY_EMAIL_FULFILLED, VERIFY_EMAIL_PENDING, VERIFY_EMAIL_REJECTED,
 } from '../actions/auth.action'
 
 const initialState = {
@@ -12,11 +12,13 @@ const initialState = {
   user: null,
   errorLogin: null,
   errorRegister: null,
+  errorVerify: null,
   verificationCode: '',
 }
 
 const auth = (state = initialState, { type, payload }) => {
   switch (type) {
+    // SIGN IN
     case SIGN_IN_PENDING:
       return {
         ...state,
@@ -38,18 +40,18 @@ const auth = (state = initialState, { type, payload }) => {
         loading: false,
       }
     }
-
+    // SIGN UP
     case SIGN_UP_PENDING:
       return {
         ...state,
-        errorRegister: payload,
-        loading: false,
+        loading: true,
       }
 
     case SIGN_UP_REJECTED:
       return {
         ...state,
-        loading: true,
+        errorRegister: null,
+        loading: false,
       }
 
     case SIGN_UP_FULFILLED: {
@@ -57,6 +59,28 @@ const auth = (state = initialState, { type, payload }) => {
         ...state,
         verificationCode: payload,
         errorRegister: null,
+        loading: false,
+      }
+    }
+    // VERIFY EMAIL
+    case VERIFY_EMAIL_PENDING:
+      return {
+        ...state,
+        loading: true,
+      }
+
+    case VERIFY_EMAIL_REJECTED:
+      return {
+        ...state,
+        errorVerify: payload,
+        loading: false,
+      }
+
+    case VERIFY_EMAIL_FULFILLED: {
+      return {
+        ...state,
+        user: payload,
+        errorVerify: null,
         loading: false,
       }
     }

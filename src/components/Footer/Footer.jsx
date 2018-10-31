@@ -13,7 +13,7 @@ const Footer = ({ classes, routes }) => (
     <div className={classes.container}>
       <div className={classes.left}>
         <List className={classes.list}>
-          {routes.filter(route => route.path !== '/verify-email').map((route, key) => (
+          {routes.filter(route => !(route.path.indexOf('/verify-email') + 1)).map((route, key) => (
             <ListItem key={key} className={classes.inlineBlock}>
               <Link to={route.path}>
                 {route.sidebarName}

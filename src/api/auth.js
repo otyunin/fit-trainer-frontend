@@ -27,3 +27,18 @@ export const signUp = async user => {
     verificationCode: res.data.verificationCode,
   }
 }
+
+export const verifyEmail = async data => {
+  const [err, res] = await post('/verify-email/', data)
+
+  if (err) throw error(err)
+  if (!res.data.success) throw res.data.message
+
+  localStorage.setItem('JWT_TOKEN', res.data.token)
+  axios.defaults.headers.common.Authorization = res.data.token
+
+  return {
+    email: data.email,
+    token: res.data.token,
+  }
+}
