@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { ErrorMessage, Form } from 'formik'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import GridItem from 'components/Grid/GridItem.jsx'
 import GridContainer from 'components/Grid/GridContainer.jsx'
@@ -109,6 +110,7 @@ const SignUp = ({ ...props }) => {
                       }}
                       inputProps={{
                         name: 'password',
+                        type: 'password',
                       }}
                     />
                   </GridItem>
@@ -133,6 +135,7 @@ const SignUp = ({ ...props }) => {
                       }}
                       inputProps={{
                         name: 'repeatPassword',
+                        type: 'password',
                       }}
                     />
                   </GridItem>
@@ -167,6 +170,15 @@ SignUp.propTypes = {
   isSubmitting: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleBlur: PropTypes.func.isRequired,
+  error: PropTypes.string,
 }
 
-export default formik(withStyles(styles)(SignUp))
+SignUp.defaultProps = {
+  error: '',
+}
+
+const mapStateToProps = store => ({
+  error: store.errorRegister,
+})
+
+export default connect(mapStateToProps)(formik(withStyles(styles)(SignUp)))

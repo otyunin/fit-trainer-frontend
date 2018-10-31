@@ -1,5 +1,6 @@
 import { withFormik } from 'formik'
 import * as Yup from 'yup'
+import { signUp } from '../../redux/actions/auth.action'
 
 const formik = withFormik({
   mapPropsToValues: () => ({
@@ -21,9 +22,11 @@ const formik = withFormik({
       .required('Repeat password is required'),
   }),
   handleSubmit: (values, { props, setSubmitting }) => {
-    setTimeout(() => {
-      setSubmitting(false)
-    }, 500)
+    props.dispatch(signUp(values))
+      .then(() => {
+        setSubmitting(false)
+      })
+      .catch(() => setSubmitting(false))
   },
   displayName: 'SignUp',
 })

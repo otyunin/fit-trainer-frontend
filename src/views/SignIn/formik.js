@@ -1,5 +1,7 @@
 import { withFormik } from 'formik'
 import * as Yup from 'yup'
+import { push } from 'connected-react-router'
+import { signIn } from '../../redux/actions/auth.action'
 
 const formik = withFormik({
   mapPropsToValues: () => ({
@@ -17,9 +19,12 @@ const formik = withFormik({
       .required('Password is required'),
   }),
   handleSubmit: (values, { props, setSubmitting }) => {
-    setTimeout(() => {
-      setSubmitting(false)
-    }, 500)
+    props.dispatch(signIn(values))
+      .then(() => {
+        setSubmitting(false)
+        props.dispatch(push('/'))
+      })
+      .catch(() => setSubmitting(false))
   },
   displayName: 'SignIn',
 })

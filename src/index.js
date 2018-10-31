@@ -1,19 +1,53 @@
+import { AppContainer } from 'react-hot-loader'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { applyMiddleware, createStore } from 'redux'
+import { composeWithDevTools } from 'redux-devtools-extension'
+import { Provider } from 'react-redux'
 import { createBrowserHistory } from 'history'
-import { Route, Router, Switch } from 'react-router-dom'
+import { connectRouter, routerMiddleware } from 'connected-react-router'
+import thunk from 'redux-thunk'
+import promiseMiddleware from 'redux-promise-middleware'
+import auth from './redux/reducers/auth.reducer'
+import App from './App'
 
 import 'assets/css/material-dashboard-react.css?v=1.5.0'
 
-import indexRoutes from 'routes/index.jsx'
+const history = createBrowserHistory()
 
-const hist = createBrowserHistory()
-
-ReactDOM.render(
-  <Router history={hist}>
-    <Switch>
-      {indexRoutes.map((prop, key) => <Route path={prop.path} component={prop.component} key={key} />)}
-    </Switch>
-  </Router>,
-  document.getElementById('root'),
+const store = createStore(
+  connectRouter(history)(auth),
+  composeWithDevTools(
+    applyMiddleware(
+      routerMiddleware(history),
+      thunk,
+      promiseMiddleware(),
+    ),
+  ),
 )
+
+const render = () => {
+  ReactDOM.render(
+    <AppContainer>
+      <Provider store={store}>
+        <App history={history} />
+      </Provider>
+    </AppContainer>,
+    document.getElementById('root'),
+  )
+}
+
+render()
+
+// Hot reloading
+if (module.hot) {
+  // Reload components
+  module.hot.accept('./App', () => {
+    render()
+  })
+
+  // Reload reducers
+  module.hot.accept('./redux/reducers/auth.reducer', () => {
+    store.replaceReducer(connectRouter(history)(auth))
+  })
+}
