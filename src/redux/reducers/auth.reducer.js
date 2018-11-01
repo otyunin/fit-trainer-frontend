@@ -1,10 +1,14 @@
 import {
+  LOGOUT,
   SIGN_IN_FULFILLED,
   SIGN_IN_PENDING,
   SIGN_IN_REJECTED,
   SIGN_UP_FULFILLED,
   SIGN_UP_PENDING,
-  SIGN_UP_REJECTED, VERIFY_EMAIL_FULFILLED, VERIFY_EMAIL_PENDING, VERIFY_EMAIL_REJECTED,
+  SIGN_UP_REJECTED,
+  VERIFY_EMAIL_FULFILLED,
+  VERIFY_EMAIL_PENDING,
+  VERIFY_EMAIL_REJECTED,
 } from '../actions/auth.action'
 
 const initialState = {
@@ -82,6 +86,13 @@ const auth = (state = initialState, { type, payload }) => {
         user: payload,
         errorVerify: null,
         loading: false,
+      }
+    }
+
+    case LOGOUT: {
+      return {
+        ...state,
+        user: null,
       }
     }
 

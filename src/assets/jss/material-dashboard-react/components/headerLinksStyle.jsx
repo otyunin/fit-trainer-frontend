@@ -1,4 +1,4 @@
-import { dangerColor, defaultFont } from 'assets/jss/material-dashboard-react.jsx'
+import { dangerColor, defaultFont, infoBoxShadow, infoColor } from 'assets/jss/material-dashboard-react.jsx'
 
 import dropdownStyle from 'assets/jss/material-dashboard-react/dropdownStyle.jsx'
 
@@ -28,6 +28,10 @@ const headerLinksStyle = theme => ({
     margin: '0px',
   },
   buttonLink: {
+    color: 'white',
+    '&:hover': {
+      color: 'white',
+    },
     [theme.breakpoints.down('sm')]: {
       display: 'flex',
       margin: '10px 15px 0',
@@ -49,6 +53,13 @@ const headerLinksStyle = theme => ({
       '& > span': {
         justifyContent: 'flex-start',
         width: '100%',
+      },
+    },
+    [theme.breakpoints.up('md')]: {
+      color: 'inherit',
+      '&:hover': {
+        backgroundColor: infoColor,
+        ...infoBoxShadow,
       },
     },
   },
@@ -103,6 +114,16 @@ const headerLinksStyle = theme => ({
       margin: '10px 15px 0',
     },
     display: 'inline-block',
+  },
+  emailLabel: {
+    ...defaultFont,
+    fontSize: '14px',
+    padding: '0 25px',
+    textTransform: 'lowercase',
+    cursor: 'pointer',
+    [theme.breakpoints.down('sm')]: {
+      padding: 0,
+    },
   },
 })
 

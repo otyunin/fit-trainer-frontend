@@ -2,6 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Redirect, Route, Switch } from 'react-router-dom'
+import { connect } from 'react-redux'
 // creates a beautiful scrollbar
 import PerfectScrollbar from 'perfect-scrollbar'
 import 'perfect-scrollbar/css/perfect-scrollbar.css'
@@ -18,17 +19,19 @@ import dashboardStyle from 'assets/jss/material-dashboard-react/layouts/dashboar
 
 import image from 'assets/img/sidebar-4.jpg'
 import logo from 'assets/img/reactlogo.png'
+import { SIGN_IN_FULFILLED } from '../../redux/actions/auth.action'
+import getUser from '../../utils/storage'
 
-const switchRoutes = (
+const switchRoutes = user => (
   <Switch>
-    {dashboardRoutes.map((prop, key) => {
+    {dashboardRoutes(user).map((prop, key) => {
       if (prop.redirect) return <Redirect from={prop.path} to={prop.to} key={key} />
       return <Route path={prop.path} component={prop.component} key={key} />
     })}
   </Switch>
 )
 
-class App extends React.Component {
+class Dashboard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -38,6 +41,13 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    const { dispatch } = this.props
+    if (localStorage.getItem('JWT_TOKEN') && localStorage.getItem('EMAIL')) {
+      dispatch({
+        type: SIGN_IN_FULFILLED,
+        payload: getUser(),
+      })
+    }
     if (navigator.platform.indexOf('Win') > -1) {
       // eslint-disable-next-line no-new
       new PerfectScrollbar(this.refs.mainPanel)
@@ -50,6 +60,7 @@ class App extends React.Component {
     if (e.history.location.pathname !== e.location.pathname) {
       this.refs.mainPanel.scrollTop = 0
       if (mobileOpen) {
+        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ mobileOpen: false })
       }
     }
@@ -71,12 +82,12 @@ class App extends React.Component {
   }
 
   render() {
-    const { classes, ...rest } = this.props
+    const { classes, user, ...rest } = this.props
     const { mobileOpen } = this.state
     return (
       <div className={classes.wrapper}>
         <Sidebar
-          routes={dashboardRoutes}
+          routes={dashboardRoutes(user)}
           logoText="Fit trainer"
           logo={logo}
           image={image}
@@ -87,22 +98,31 @@ class App extends React.Component {
         />
         <div className={classes.mainPanel} ref="mainPanel">
           <Header
-            routes={dashboardRoutes}
+            routes={dashboardRoutes(user)}
             handleDrawerToggle={this.handleDrawerToggle}
             {...rest}
           />
           <div className={classes.content}>
-            <div className={classes.container}>{switchRoutes}</div>
+            <div className={classes.container}>{switchRoutes(user)}</div>
           </div>
-          <Footer routes={dashboardRoutes} />
+          <Footer routes={dashboardRoutes(user)} />
         </div>
       </div>
     )
   }
 }
 
-App.propTypes = {
+Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
+  user: PropTypes.object,
 }
 
-export default withStyles(dashboardStyle)(App)
+Dashboard.defaultProps = {
+  user: null,
+}
+
+const mapStateToProps = store => ({
+  user: store.user,
+})
+
+export default connect(mapStateToProps)(withStyles(dashboardStyle)(Dashboard))

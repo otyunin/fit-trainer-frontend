@@ -15,6 +15,8 @@ export const VERIFY_EMAIL_PENDING = 'VERIFY_EMAIL_PENDING'
 export const VERIFY_EMAIL_REJECTED = 'VERIFY_EMAIL_REJECTED'
 export const VERIFY_EMAIL_FULFILLED = 'VERIFY_EMAIL_FULFILLED'
 
+export const LOGOUT = 'LOGOUT'
+
 export const signIn = user => async dispatch => {
   await dispatch({
     type: SIGN_IN,
@@ -33,5 +35,12 @@ export const verifyEmail = data => async dispatch => {
   await dispatch({
     type: VERIFY_EMAIL,
     payload: API.verifyEmail(data),
+  })
+}
+
+export const logout = () => async dispatch => {
+  localStorage.clear()
+  await dispatch({
+    type: LOGOUT,
   })
 }

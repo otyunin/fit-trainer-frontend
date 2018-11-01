@@ -8,6 +8,7 @@ export const signIn = async user => {
   if (!res.data.success) throw res.data.message
 
   localStorage.setItem('JWT_TOKEN', res.data.token)
+  localStorage.setItem('EMAIL', user.email)
   axios.defaults.headers.common.Authorization = res.data.token
 
   return {
@@ -35,6 +36,7 @@ export const verifyEmail = async data => {
   if (!res.data.success) throw res.data.message
 
   localStorage.setItem('JWT_TOKEN', res.data.token)
+  localStorage.setItem('EMAIL', data.email)
   axios.defaults.headers.common.Authorization = res.data.token
 
   return {
