@@ -3,6 +3,11 @@ import PropTypes from 'prop-types'
 // @material-ui/core
 import withStyles from '@material-ui/core/styles/withStyles'
 import Grid from '@material-ui/core/Grid/Grid'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 // @material-ui/icons
 import { ArrowDownward, ArrowUpward, Cancel } from '@material-ui/icons'
 // core components
@@ -27,6 +32,16 @@ class EditExercises extends React.Component {
       { order: 2, name: 'Exercise 3', type: 'seconds' },
       { order: 3, name: 'Exercise 4', type: 'hours' },
     ],
+    open: false,
+    indexToRemove: null,
+  }
+
+  handleCloseDialog = () => {
+    this.setState({ open: false, indexToRemove: null })
+  }
+
+  handleClickRemove = target => {
+    this.setState({ open: true, indexToRemove: target })
   }
 
   handleClickUp = target => {
@@ -83,21 +98,21 @@ class EditExercises extends React.Component {
     }
   }
 
-  handleClickRemove = target => {
-    const { exercises } = this.state
+  handleApplyDeletion = () => {
+    const { exercises, indexToRemove } = this.state
     const newExercises = exercises.map((exercise, index) => {
-      if (index > target) {
+      if (index > indexToRemove) {
         exercise.order -= 1
       }
       return exercise
     })
-    newExercises.splice(0, 1)
-    this.setState({ exercises: newExercises })
+    newExercises.splice(indexToRemove, 1)
+    this.setState({ exercises: newExercises, open: false })
   }
 
   render() {
     const { classes } = this.props
-    const { exercises } = this.state
+    const { exercises, open } = this.state
     return (
       <div>
         <GridContainer>
@@ -155,6 +170,27 @@ class EditExercises extends React.Component {
             </Card>
           </GridItem>
         </GridContainer>
+        <Dialog
+          open={open}
+          onClose={this.handleCloseDialog}
+          aria-labelledby="dialog-title"
+          aria-describedby="dialog-description"
+        >
+          <DialogTitle id="dialog-title">Confirm the deletion</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="dialog-description">
+              Do you really want to delete the exercise?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleCloseDialog} color="transparent">
+              Disagree
+            </Button>
+            <Button onClick={this.handleApplyDeletion} color="danger" autoFocus>
+              Agree
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     )
   }
