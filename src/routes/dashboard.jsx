@@ -1,7 +1,6 @@
 // @material-ui/icons
 
 import { Dashboard, Person, Receipt } from '@material-ui/icons'
-
 // core components/views
 import DashboardPage from 'views/Dashboard/Dashboard'
 import SignInPage from 'views/SignIn/SignIn'
@@ -12,14 +11,7 @@ import EditExercisesPage from 'views/EditExercises/EditExercises'
 import CreateWorkoutPage from 'views/CreateWorkout/CreateWorkout'
 import EditWorkoutPage from 'views/EditWorkout/EditWorkout'
 
-const dashboardRoutes = [
-  {
-    path: '/dashboard',
-    sidebarName: 'Dashboard',
-    navbarName: 'Material Dashboard',
-    icon: Dashboard,
-    component: DashboardPage,
-  },
+const isAuthorizedUser = user => (!user ? ([
   {
     path: '/signin',
     sidebarName: 'Sign in',
@@ -34,12 +26,14 @@ const dashboardRoutes = [
     icon: Person,
     component: SignUpPage,
   },
+  { redirect: true, path: '/', to: '/signup', navbarName: 'Redirect' },
+]) : ([
   {
-    path: '/verify-email/:email/:verificationCode',
-    sidebarName: 'Email verification',
-    navbarName: 'Email verification',
-    icon: Person,
-    component: VerifyEmailPage,
+    path: '/dashboard',
+    sidebarName: 'Dashboard',
+    navbarName: 'Material Dashboard',
+    icon: Dashboard,
+    component: DashboardPage,
   },
   {
     path: '/create-exercise',
@@ -70,6 +64,17 @@ const dashboardRoutes = [
     component: EditWorkoutPage,
   },
   { redirect: true, path: '/', to: '/dashboard', navbarName: 'Redirect' },
+]))
+
+const dashboardRoutes = user => [
+  ...isAuthorizedUser(user),
+  {
+    path: '/verify-email/:email/:verificationCode',
+    sidebarName: 'Email verification',
+    navbarName: 'Email verification',
+    icon: Person,
+    component: VerifyEmailPage,
+  },
 ]
 
 export default dashboardRoutes

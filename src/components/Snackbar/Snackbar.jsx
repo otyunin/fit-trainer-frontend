@@ -38,7 +38,7 @@ function Snackbar({ ...props }) {
       }}
       open={open}
       message={<div>
-        {icon !== undefined ? <icon className={classes.icon} /> : null}
+        {icon !== undefined ? <props.icon className={classes.icon} /> : null}
         <span className={messageClasses}>{message}</span>
       </div>}
       action={action}

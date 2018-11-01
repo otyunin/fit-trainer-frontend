@@ -1,12 +1,12 @@
 {
-  "name": "material-dashboard-react",
+  "name": "fit-trainer",
   "config": {
     "port": "3000"
   },
   "version": "1.5.0",
-  "description": "Material Dashboard React. Coded by Creative Tim",
+  "description": "Fit trainer. Trainee project",
   "private": false,
-  "main": "dist/index.js",
+  "main": "srr/index.js",
   "dependencies": {
     "@material-ui/core": "3.1.0",
     "@material-ui/icons": "3.0.1",
@@ -52,15 +52,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/creativetimofficial/material-dashboard-react.git"
+    "url": "https://github.com/otyunin/fit-trainer-frontend"
   },
   "keywords": [],
-  "author": "Creative Tim <hello@creative-tim.com> (https://www.creative-tim.com/)",
+  "author": "Oleg Tyunin",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/creativetimofficial/material-dashboard-react/issues"
+    "url": "https://github.com/otyunin/fit-trainer-frontend/issues"
   },
-  "homepage": "https://creativetimofficial.github.io/material-dashboard-react/#/dashboard",
   "optionalDependencies": {
     "babel-eslint": "7.2.3",
     "eslint": "^5.5.0",

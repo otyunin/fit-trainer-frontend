@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { ErrorMessage, Form } from 'formik'
 import { Link } from 'react-router-dom'
+import { CheckCircleOutline, ErrorOutline } from '@material-ui/icons'
 import GridItem from 'components/Grid/GridItem.jsx'
 import GridContainer from 'components/Grid/GridContainer.jsx'
 import CustomInput from 'components/CustomInput/CustomInput.jsx'
@@ -12,6 +13,8 @@ import CardHeader from 'components/Card/CardHeader.jsx'
 import CardBody from 'components/Card/CardBody.jsx'
 import CardFooter from 'components/Card/CardFooter.jsx'
 import Danger from 'components/Typography/Danger'
+import Snackbar from 'components/Snackbar/Snackbar'
+
 import { connect } from 'react-redux'
 import formik from './formik'
 
@@ -49,11 +52,13 @@ const SignIn = ({ ...props }) => {
   const {
     classes,
     values,
+    error,
     errors,
     touched,
     isSubmitting,
     handleChange,
     handleBlur,
+    status,
   } = props
 
   const errorEmail = errors.email && touched.email
@@ -131,6 +136,13 @@ const SignIn = ({ ...props }) => {
             </Card>
           </Form>
         </GridItem>
+        <Snackbar
+          place="tc"
+          color={error ? 'danger' : 'success'}
+          icon={error ? ErrorOutline : CheckCircleOutline}
+          message={!error ? 'Welcome' : error}
+          open={status.open}
+        />
       </GridContainer>
     </div>
   )
@@ -144,17 +156,16 @@ SignIn.propTypes = {
   isSubmitting: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleBlur: PropTypes.func.isRequired,
-  user: PropTypes.object,
   error: PropTypes.string,
+  status: PropTypes.object,
 }
 
 SignIn.defaultProps = {
-  user: null,
   error: '',
+  status: {},
 }
 
 const mapStateToProps = store => ({
-  user: store.user,
   error: store.errorLogin,
 })
 

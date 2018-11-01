@@ -21,12 +21,18 @@ const formik = withFormik({
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required('Repeat password is required'),
   }),
-  handleSubmit: (values, { props, setSubmitting }) => {
+  handleSubmit: (values, { props, setSubmitting, setStatus, resetForm }) => {
     props.dispatch(signUp(values))
       .then(() => {
+        resetForm()
+        setStatus({ open: true, message: 'Confirm email address to complete registration' })
         setSubmitting(false)
       })
-      .catch(() => setSubmitting(false))
+      .catch(() => {
+        setStatus({ open: true })
+        setTimeout(() => setStatus({ open: false }), 6000)
+        setSubmitting(false)
+      })
   },
   displayName: 'SignUp',
 })
