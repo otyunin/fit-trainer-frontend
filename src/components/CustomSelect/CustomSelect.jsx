@@ -41,6 +41,7 @@ class CustomSelect extends React.Component {
       error,
       success,
       selectData,
+      value,
     } = this.props
 
     const { selectedOption } = this.state
@@ -73,7 +74,7 @@ class CustomSelect extends React.Component {
         ) : null}
         <Select
           onChange={this.handleChange}
-          value={selectedOption}
+          value={value || selectedOption}
           classes={{
             root: marginTop,
             disabled: classes.disabled,
@@ -121,6 +122,7 @@ CustomSelect.propTypes = {
   error: PropTypes.bool,
   success: PropTypes.bool,
   selectData: PropTypes.array,
+  value: PropTypes.string,
 }
 
 CustomSelect.defaultProps = {
@@ -132,6 +134,7 @@ CustomSelect.defaultProps = {
   error: false,
   success: false,
   selectData: [],
+  value: undefined,
 }
 
 export default withStyles(customSelectStyle)(CustomSelect)
