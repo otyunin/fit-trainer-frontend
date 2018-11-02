@@ -12,10 +12,13 @@ import CardFooter from 'components/Card/CardFooter.jsx'
 import CustomSelect from 'components/CustomSelect/CustomSelect'
 
 import createExerciseStyle from 'assets/jss/material-dashboard-react/views/createExerciseStyle'
+import { connect } from 'react-redux'
+import { createExercise } from '../../redux/actions/exercises.action'
 
 class CreateExercise extends React.Component {
   state = {
     name: '',
+    measurement: '',
   }
 
   handleChange = (event) => {
@@ -24,11 +27,14 @@ class CreateExercise extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
+    const { dispatch } = this.props
+    const { name, measurement } = this.state
+    dispatch(createExercise({ name, measurement }))
   }
 
   render() {
     const { classes } = this.props
-    const { name } = this.state
+    const { name, measurement } = this.state
     return (
       <div>
         <GridContainer>
@@ -63,8 +69,10 @@ class CreateExercise extends React.Component {
                         id="measurement-type"
                         selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilimeters']}
                         inputProps={{
-                          name: 'measurementType',
+                          name: 'measurement',
+                          onChange: this.handleChange,
                         }}
+                        value={measurement}
                         labelProps={{ shrink: true }}
                         formControlProps={{
                           fullWidth: true,
@@ -89,6 +97,7 @@ class CreateExercise extends React.Component {
 
 CreateExercise.propTypes = {
   classes: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
 }
 
-export default withStyles(createExerciseStyle)(CreateExercise)
+export default connect()(withStyles(createExerciseStyle)(CreateExercise))

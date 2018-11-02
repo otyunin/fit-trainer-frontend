@@ -154,7 +154,7 @@ VerifyEmail.defaultProps = {
 }
 
 const mapStateToProps = store => ({
-  error: store.errorVerify,
+  error: store.auth.errorVerify,
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(VerifyEmail))

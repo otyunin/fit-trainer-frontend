@@ -150,7 +150,7 @@ HeaderLinks.defaultProps = {
 }
 
 const mapStateToProps = store => ({
-  user: store.user,
+  user: store.auth.user,
 })
 
 export default connect(mapStateToProps)(withStyles(headerLinksStyle)(HeaderLinks))
