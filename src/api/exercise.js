@@ -6,7 +6,7 @@ const config = () => ({
   },
 })
 
-const createExercise = async data => {
+export const createExercise = async data => {
   const [err, res] = await post('/exercises/', data, config)
 
   if (err) throw error(err)
@@ -16,5 +16,3 @@ const createExercise = async data => {
     success: data.success,
   }
 }
-
-export default createExercise

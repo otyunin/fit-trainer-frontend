@@ -1,5 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { Form } from 'formik'
+import { CheckCircleOutline, ErrorOutline } from '@material-ui/icons'
 import withStyles from '@material-ui/core/styles/withStyles'
 import GridItem from 'components/Grid/GridItem.jsx'
 import GridContainer from 'components/Grid/GridContainer.jsx'
@@ -10,94 +13,118 @@ import CardHeader from 'components/Card/CardHeader.jsx'
 import CardBody from 'components/Card/CardBody.jsx'
 import CardFooter from 'components/Card/CardFooter.jsx'
 import CustomSelect from 'components/CustomSelect/CustomSelect'
+import Snackbar from 'components/Snackbar/Snackbar'
 
 import createExerciseStyle from 'assets/jss/material-dashboard-react/views/createExerciseStyle'
-import { connect } from 'react-redux'
-import { createExercise } from '../../redux/actions/exercises.action'
+import formik from './formik'
 
-class CreateExercise extends React.Component {
-  state = {
-    name: '',
-    measurement: '',
-  }
+const CreateExercise = ({ ...props }) => {
+  const {
+    classes,
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    handleChange,
+    handleBlur,
+    error,
+    status,
+  } = props
 
-  handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
+  const errorName = errors.name && touched.name
+  const errorMeasurement = errors.measurement && touched.measurement
 
-  handleSubmit = (event) => {
-    event.preventDefault()
-    const { dispatch } = this.props
-    const { name, measurement } = this.state
-    dispatch(createExercise({ name, measurement }))
-  }
-
-  render() {
-    const { classes } = this.props
-    const { name, measurement } = this.state
-    return (
-      <div>
-        <GridContainer>
-          <GridItem xs={12} sm={12} md={8}>
-            <form onSubmit={this.handleSubmit}>
-              <Card>
-                <CardHeader color="primary">
-                  <h4 className={classes.cardTitleWhite}>Create new exercise</h4>
-                  <p className={classes.cardCategoryWhite}>Please, add a new exercise name and measurement type</p>
-                </CardHeader>
-                <CardBody>
-                  <GridContainer>
-                    <GridItem xs={12} sm={12} md={12}>
-                      <CustomInput
-                        labelText="Exercise Name"
-                        id="exercise-name"
-                        formControlProps={{
-                          fullWidth: true,
-                        }}
-                        inputProps={{
-                          name: 'name',
-                          onChange: this.handleChange,
-                          value: name,
-                        }}
-                      />
-                    </GridItem>
-                  </GridContainer>
-                  <GridContainer>
-                    <GridItem xs={12} sm={12} md={12}>
-                      <CustomSelect
-                        labelText="Measurement type"
-                        id="measurement-type"
-                        selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilimeters']}
-                        inputProps={{
-                          name: 'measurement',
-                          onChange: this.handleChange,
-                        }}
-                        value={measurement}
-                        labelProps={{ shrink: true }}
-                        formControlProps={{
-                          fullWidth: true,
-                        }}
-                      />
-                    </GridItem>
-                  </GridContainer>
-                </CardBody>
-                <CardFooter className={classes.cardActions}>
-                  <Button color="primary" type="submit">
-                    Create exercise
-                  </Button>
-                </CardFooter>
-              </Card>
-            </form>
-          </GridItem>
-        </GridContainer>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={8}>
+          <Form>
+            <Card>
+              <CardHeader color="primary">
+                <h4 className={classes.cardTitleWhite}>Create new exercise</h4>
+                <p className={classes.cardCategoryWhite}>Please, add a new exercise name and measurement type</p>
+              </CardHeader>
+              <CardBody>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <CustomInput
+                      labelText="Exercise Name"
+                      id="exercise-name"
+                      error={errorName}
+                      success={!!(!errorName && values.name)}
+                      formControlProps={{
+                        fullWidth: true,
+                        onChange: handleChange,
+                        onBlur: handleBlur,
+                      }}
+                      inputProps={{
+                        value: values.name,
+                        name: 'name',
+                      }}
+                    />
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <CustomSelect
+                      labelText="Measurement type"
+                      id="measurement-type"
+                      selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilimeters']}
+                      labelProps={{ shrink: true }}
+                      value={values.measurement}
+                      error={!!(!values.measurement && touched.measurement)}
+                      success={!!(!errorMeasurement && values.measurement)}
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                      inputProps={{
+                        name: 'measurement',
+                        onChange: handleChange,
+                        onBlur: handleBlur,
+                      }}
+                    />
+                  </GridItem>
+                </GridContainer>
+              </CardBody>
+              <CardFooter className={classes.cardActions}>
+                <Button color="primary" type="submit" disabled={isSubmitting}>
+                  Create exercise
+                </Button>
+              </CardFooter>
+            </Card>
+          </Form>
+        </GridItem>
+        <Snackbar
+          place="tc"
+          color={error ? 'danger' : 'success'}
+          icon={error ? ErrorOutline : CheckCircleOutline}
+          message={(!error ? status.message : error) || ''}
+          open={status.open}
+        />
+      </GridContainer>
+    </div>
+  )
 }
 
 CreateExercise.propTypes = {
   classes: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
+  values: PropTypes.object.isRequired,
+  touched: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleBlur: PropTypes.func.isRequired,
+  error: PropTypes.string,
+  status: PropTypes.object,
 }
 
-export default connect()(withStyles(createExerciseStyle)(CreateExercise))
+CreateExercise.defaultProps = {
+  error: null,
+  status: {},
+}
+
+const mapStateToProps = store => ({
+  error: store.exercises.error,
+})
+
+export default connect(mapStateToProps)(formik(withStyles(createExerciseStyle)(CreateExercise)))
