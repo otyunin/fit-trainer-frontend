@@ -19,8 +19,8 @@ import dashboardStyle from 'assets/jss/material-dashboard-react/layouts/dashboar
 
 import image from 'assets/img/sidebar-4.jpg'
 import logo from 'assets/img/reactlogo.png'
-import { SIGN_IN_FULFILLED } from '../../redux/actions/auth.action'
-import getUser from '../../utils/storage'
+import { SIGN_IN_FULFILLED } from 'redux/actions/auth.action'
+import { getUser } from 'utils/storage'
 
 const switchRoutes = user => (
   <Switch>

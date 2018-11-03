@@ -1,3 +1,5 @@
+import { setUser } from 'utils/storage'
+
 import {
   LOGOUT,
   SIGN_IN_FULFILLED,
@@ -37,6 +39,7 @@ const auth = (state = initialState, { type, payload }) => {
       }
 
     case SIGN_IN_FULFILLED: {
+      setUser(payload)
       return {
         ...state,
         user: payload,
@@ -81,6 +84,7 @@ const auth = (state = initialState, { type, payload }) => {
       }
 
     case VERIFY_EMAIL_FULFILLED: {
+      setUser(payload)
       return {
         ...state,
         user: payload,
