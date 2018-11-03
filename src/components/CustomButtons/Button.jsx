@@ -63,6 +63,7 @@ RegularButton.propTypes = {
   block: PropTypes.bool,
   link: PropTypes.bool,
   justIcon: PropTypes.bool,
+  children: PropTypes.node,
   className: PropTypes.string,
   // use this to pass the classes props from Material-UI
   muiClasses: PropTypes.object,
@@ -77,6 +78,7 @@ RegularButton.defaultProps = {
   block: false,
   link: false,
   justIcon: false,
+  children: '',
   className: '',
   muiClasses: {},
 }
