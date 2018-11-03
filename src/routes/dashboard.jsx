@@ -30,6 +30,7 @@ const dashboardRoutes = user => [
     path: '/verify-email/:email/:verificationCode',
     sidebarName: 'Email verification',
     navbarName: 'Email verification',
+    invisible: true,
     icon: Person,
     component: VerifyEmailPage,
   },

@@ -26,8 +26,9 @@ const Sidebar = ({ ...props }) => {
   const { classes, color, logo, image, logoText, routes, open, handleDrawerToggle } = props
   const links = (
     <List className={classes.list}>
-      {routes.filter(route => !(route.path.indexOf('/verify-email') + 1)).map((prop, key) => {
+      {routes.map((prop, key) => {
         if (prop.redirect) return null
+        if (prop.invisible) return null
         const listItemClasses = classNames({
           [` ${classes[color]}`]: activeRoute(prop.path),
         })

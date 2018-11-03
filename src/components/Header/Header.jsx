@@ -16,14 +16,12 @@ import headerStyle from 'assets/jss/material-dashboard-react/components/headerSt
 import HeaderLinks from './HeaderLinks.jsx'
 
 function Header({ ...props }) {
-  const containVerificationPath = route => !!(route.indexOf('/verify-email') + 1)
-
   function makeBrand() {
     const { location, routes } = props
     let name
     routes.map((prop) => {
-      const isVerificationPath = containVerificationPath(prop.path) && containVerificationPath(location.pathname)
-      if (prop.path === location.pathname || isVerificationPath) {
+      if (prop.invisible) return null
+      if (prop.path === location.pathname) {
         name = prop.navbarName
       }
       return null
