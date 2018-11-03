@@ -13,8 +13,10 @@ import CardBody from 'components/Card/CardBody.jsx'
 import CardFooter from 'components/Card/CardFooter.jsx'
 import CustomSelect from 'components/CustomSelect/CustomSelect'
 import Snackbar from 'components/Snackbar/Snackbar'
+import Danger from 'components/Typography/Danger'
 
 import createExerciseStyle from 'assets/jss/material-dashboard-react/views/createExerciseStyle'
+import { ErrorMessage } from 'formik'
 import formik from './formik'
 
 class CreateExercise extends React.Component {
@@ -72,7 +74,6 @@ class CreateExercise extends React.Component {
                         labelText="Exercise Name"
                         id="exercise-name"
                         error={errorName}
-                        success={!!(!errorName && values.name)}
                         formControlProps={{
                           fullWidth: true,
                           onChange: handleChange,
@@ -84,6 +85,9 @@ class CreateExercise extends React.Component {
                         }}
                       />
                     </GridItem>
+                    <GridItem xs={12} sm={12} md={6}>
+                      <ErrorMessage component={Danger} name="name" />
+                    </GridItem>
                   </GridContainer>
                   <GridContainer>
                     <GridItem xs={12} sm={12} md={12}>
@@ -93,10 +97,10 @@ class CreateExercise extends React.Component {
                         selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilimeters']}
                         labelProps={{ shrink: true }}
                         value={values.measurement}
-                        error={!!(!values.measurement && touched.measurement)}
-                        success={!!(!errorMeasurement && values.measurement)}
+
                         formControlProps={{
                           fullWidth: true,
+                          error: errorMeasurement,
                         }}
                         inputProps={{
                           name: 'measurement',
@@ -104,6 +108,9 @@ class CreateExercise extends React.Component {
                           onBlur: handleBlur,
                         }}
                       />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={6}>
+                      <ErrorMessage component={Danger} name="measurement" />
                     </GridItem>
                   </GridContainer>
                 </CardBody>

@@ -10,7 +10,7 @@ const formik = withFormik({
 
   validationSchema: Yup.object().shape({
     name: Yup.string()
-      .required('Name is required'),
+      .required('Exercise name is required'),
     measurement: Yup.string()
       .required('Measurement is required'),
   }),
