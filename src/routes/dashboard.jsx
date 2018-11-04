@@ -1,6 +1,5 @@
 // @material-ui/icons
-
-import { Dashboard, Person, Receipt } from '@material-ui/icons'
+import { Dashboard, Edit, FitnessCenter, ListAlt, Person } from '@material-ui/icons'
 // core components/views
 import DashboardPage from 'views/Dashboard/Dashboard'
 import SignInPage from 'views/SignIn/SignIn'
@@ -45,28 +44,28 @@ const dashboardRoutes = user => [
     path: '/create-exercise',
     sidebarName: 'New Excercise',
     navbarName: 'New Excercise',
-    icon: Receipt,
+    icon: FitnessCenter,
     component: CreateExercisePage,
   }) || null,
   (user && {
     path: '/edit-exercises',
     sidebarName: 'Edit Excercises',
     navbarName: 'Edit Excercises',
-    icon: Receipt,
+    icon: Edit,
     component: EditExercisesPage,
   }) || null,
   (user && {
     path: '/create-workout',
     sidebarName: 'New Workout',
     navbarName: 'New Workout',
-    icon: Receipt,
+    icon: ListAlt,
     component: CreateWorkoutPage,
   }) || null,
   (user && {
     path: '/edit-workout',
     sidebarName: 'Edit Workout',
     navbarName: 'Edit Workout',
-    icon: Receipt,
+    icon: Edit,
     component: EditWorkoutPage,
   }) || null,
   { redirect: true, path: '/', to: user ? '/dashboard' : '/signin', navbarName: 'Redirect' },
