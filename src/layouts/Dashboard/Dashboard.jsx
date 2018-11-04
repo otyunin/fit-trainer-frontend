@@ -17,8 +17,8 @@ import dashboardRoutes from 'routes/dashboard.jsx'
 
 import dashboardStyle from 'assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx'
 
-import image from 'assets/img/sidebar-4.jpg'
-import logo from 'assets/img/reactlogo.png'
+import image from 'assets/img/sidebar-5.jpg'
+import logo from 'assets/img/favicon.png'
 import { SIGN_IN_FULFILLED } from 'redux/actions/auth.action'
 import { getUser } from 'utils/storage'
 
