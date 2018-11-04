@@ -23,17 +23,31 @@ import CustomSelect from 'components/CustomSelect/CustomSelect'
 import CustomInput from 'components/CustomInput/CustomInput'
 
 import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/createWorkoutStyle'
+import { connect } from 'react-redux'
+import { getExercises } from '../../redux/actions/exercises.action'
+import { updateExercises } from '../../api/exercise'
 
 class EditExercises extends React.Component {
   state = {
-    exercises: [
-      { order: 0, name: 'Exercise 1', type: 'kilograms' },
-      { order: 1, name: 'Exercise 2', type: 'grams' },
-      { order: 2, name: 'Exercise 3', type: 'seconds' },
-      { order: 3, name: 'Exercise 4', type: 'hours' },
-    ],
+    exercises: [],
     open: false,
     indexToRemove: null,
+  }
+
+  componentWillMount() {
+    const { dispatch } = this.props
+    dispatch(getExercises())
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    const { exercises } = this.props
+    if (nextProps.exercises && exercises !== nextProps.exercises) {
+      nextProps.exercises.map((exercise, index) => {
+        exercise.order = index
+        return exercise
+      })
+      this.setState({ exercises: nextProps.exercises })
+    }
   }
 
   handleCloseDialog = () => {
@@ -110,9 +124,20 @@ class EditExercises extends React.Component {
     this.setState({ exercises: newExercises, open: false })
   }
 
+  handleSubmit = () => {
+    const { exercises } = this.state
+    updateExercises(exercises)
+  }
+
+  handleChange = (event, target) => {
+    const { exercises } = this.state
+    exercises[target].measurement = event.target.value
+    this.setState(exercises)
+  }
+
   render() {
     const { classes } = this.props
-    const { exercises, open } = this.state
+    const { open, exercises } = this.state
     return (
       <div>
         <GridContainer>
@@ -124,7 +149,7 @@ class EditExercises extends React.Component {
               <CardBody>
                 <Grid container alignItems="center">
                   <Table
-                    tableData={exercises.sort((a, b) => a.order - b.order).map((exercise, index) => [
+                    tableData={!exercises ? [] : exercises.sort((a, b) => a.order - b.order).map((exercise, index) => [
                       <CustomInput
                         labelText="Exercise name"
                         id="exercise"
@@ -139,10 +164,11 @@ class EditExercises extends React.Component {
                       <CustomSelect
                         labelText="Measurement type"
                         id="measurement-type"
-                        value={exercise.type}
-                        selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilimeters']}
+                        value={exercise.measurement}
+                        selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilometers']}
                         inputProps={{
                           name: 'measurementType',
+                          onChange: (event) => this.handleChange(event, index),
                         }}
                         labelProps={{ shrink: true }}
                         formControlProps={{
@@ -165,7 +191,7 @@ class EditExercises extends React.Component {
                 </Grid>
               </CardBody>
               <CardFooter>
-                <Button color="primary">Update exercises</Button>
+                <Button color="primary" onClick={this.handleSubmit}>Update exercises</Button>
               </CardFooter>
             </Card>
           </GridItem>
@@ -198,6 +224,16 @@ class EditExercises extends React.Component {
 
 EditExercises.propTypes = {
   classes: PropTypes.object.isRequired,
+  exercises: PropTypes.array,
+  dispatch: PropTypes.func.isRequired,
 }
 
-export default withStyles(createWorkoutStyle)(EditExercises)
+EditExercises.defaultProps = {
+  exercises: [],
+}
+
+const mapStateToProps = store => ({
+  exercises: store.exercises.exercises,
+})
+
+export default connect(mapStateToProps)(withStyles(createWorkoutStyle)(EditExercises))

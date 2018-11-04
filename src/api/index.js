@@ -8,6 +8,7 @@ export const API_URL = 'http://localhost:8080'
 
 export const get = async (url, config = null) => await to(axios.get(API_URL + url, config))
 export const post = async (url, data, config = null) => await to(axios.post(API_URL + url, data, config))
+export const put = async (url, data, config = null) => await to(axios.put(API_URL + url, data, config))
 
 export const error = err => {
   if (err.response.status === 500) return 'INTERNAL SERVER ERROR'

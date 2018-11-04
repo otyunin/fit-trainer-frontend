@@ -1,7 +1,7 @@
 import {
   NEW_EXERCISE_PENDING,
   NEW_EXERCISE_REJECTED,
-  NEW_EXERCISE_FULFILLED,
+  NEW_EXERCISE_FULFILLED, GET_EXERCISES_PENDING, GET_EXERCISES_REJECTED, GET_EXERCISES_FULFILLED,
 } from '../actions/exercises.action'
 
 const initialState = {
@@ -28,6 +28,28 @@ const exercises = (state = initialState, { type, payload }) => {
     case NEW_EXERCISE_FULFILLED: {
       return {
         ...state,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case GET_EXERCISES_PENDING:
+      return {
+        ...state,
+        loading: true,
+      }
+
+    case GET_EXERCISES_REJECTED:
+      return {
+        ...state,
+        error: payload,
+        loading: false,
+      }
+
+    case GET_EXERCISES_FULFILLED: {
+      return {
+        ...state,
+        exercises: payload.exercises,
         error: null,
         loading: false,
       }

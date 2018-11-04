@@ -1,4 +1,4 @@
-import { error, post } from './index'
+import { error, post, get, put } from './index'
 
 const config = () => ({
   headers: {
@@ -14,5 +14,25 @@ export const createExercise = async data => {
 
   return {
     success: data.success,
+  }
+}
+
+export const getExercises = async () => {
+  const [err, res] = await get('/exercises/', config)
+
+  if (err) throw error(err)
+
+  return {
+    exercises: res.data,
+  }
+}
+
+export const updateExercises = async data => {
+  const [err, res] = await put('/exercises/', data, config)
+
+  if (err) throw error(err)
+
+  return {
+    exercises: res.data,
   }
 }
