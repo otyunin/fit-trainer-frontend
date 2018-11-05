@@ -18,13 +18,13 @@ const formik = withFormik({
     props.dispatch(createExercise(values))
       .then(() => {
         resetForm()
-        setStatus({ openDialog: true, message: 'New exercise successfully created!' })
-        setTimeout(() => setStatus({ openDialog: false }), 6000)
+        setStatus({ open: true, message: 'New exercise successfully created!' })
+        setTimeout(() => setStatus({ open: false }), 6000)
         setSubmitting(false)
       })
       .catch(() => {
-        setStatus({ openDialog: true })
-        setTimeout(() => setStatus({ openDialog: false }), 6000)
+        setStatus({ open: true })
+        setTimeout(() => setStatus({ open: false }), 6000)
         setSubmitting(false)
       })
   },

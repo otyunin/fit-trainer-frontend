@@ -26,14 +26,14 @@ class HeaderLinks extends React.Component {
   }
 
   handleToggle = () => {
-    this.setState(state => ({ openDialog: !state.openDialog }))
+    this.setState(state => ({ open: !state.open }))
   }
 
   handleClose = event => {
     if (this.anchorEl.contains(event.target)) {
       return
     }
-    this.setState({ openDialog: false })
+    this.setState({ open: false })
   }
 
   handleLogout = event => {
@@ -42,7 +42,7 @@ class HeaderLinks extends React.Component {
       return
     }
     dispatch(logout())
-    this.setState({ openDialog: false })
+    this.setState({ open: false })
   }
 
   render() {

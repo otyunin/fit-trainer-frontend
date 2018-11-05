@@ -54,15 +54,15 @@ class SignUp extends React.Component {
 
   componentWillReceiveProps(nextProps, nextContext) {
     const { status } = this.props
-    if (nextProps.status.openDialog !== status.openDialog) {
-      if (nextProps.status.openDialog) {
-        this.setState({ openDialog: true })
-      } else this.setState({ openDialog: false })
+    if (nextProps.status.open !== status.open) {
+      if (nextProps.status.open) {
+        this.setState({ open: true })
+      } else this.setState({ open: false })
     }
   }
 
   handleClose = () => {
-    this.setState({ openDialog: false })
+    this.setState({ open: false })
   }
 
   render() {

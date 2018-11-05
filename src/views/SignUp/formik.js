@@ -25,12 +25,12 @@ const formik = withFormik({
     props.dispatch(signUp(values))
       .then(() => {
         resetForm()
-        setStatus({ openDialog: true, message: 'Confirm email address to complete registration' })
+        setStatus({ open: true, message: 'Confirm email address to complete registration' })
         setSubmitting(false)
       })
       .catch(() => {
-        setStatus({ openDialog: true })
-        setTimeout(() => setStatus({ openDialog: false }), 6000)
+        setStatus({ open: true })
+        setTimeout(() => setStatus({ open: false }), 6000)
         setSubmitting(false)
       })
   },

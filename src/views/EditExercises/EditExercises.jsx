@@ -43,10 +43,6 @@ class EditExercises extends React.Component {
   componentWillReceiveProps(nextProps, nextContext) {
     const { exercises } = this.props
     if (nextProps.exercises && exercises !== nextProps.exercises) {
-      nextProps.exercises.map((exercise, index) => {
-        exercise.order = index
-        return exercise
-      })
       this.setState({ exercises: nextProps.exercises })
     }
   }
@@ -139,7 +135,7 @@ class EditExercises extends React.Component {
 
   handleChange = (event, target) => {
     const { exercises } = this.state
-    exercises[target].measurement = event.target.value
+    exercises[target][event.target.name] = event.target.value
     this.setState(exercises)
   }
 
@@ -166,6 +162,8 @@ class EditExercises extends React.Component {
                           fullWidth: true,
                         }}
                         inputProps={{
+                          name: 'name',
+                          onChange: (event) => this.handleChange(event, index),
                           value: exercise.name,
                         }}
                       />,
@@ -175,7 +173,7 @@ class EditExercises extends React.Component {
                         value={exercise.measurement}
                         selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilometers']}
                         inputProps={{
-                          name: 'measurementType',
+                          name: 'measurement',
                           onChange: (event) => this.handleChange(event, index),
                         }}
                         labelProps={{ shrink: true }}

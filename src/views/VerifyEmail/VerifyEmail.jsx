@@ -61,12 +61,12 @@ class VerifyEmail extends React.Component {
     event.preventDefault()
     dispatch(verifyEmail(this.state))
     if (error) {
-      this.setState({ openDialog: true })
+      this.setState({ open: true })
     } else dispatch(push('/'))
   }
 
   handleClose = () => {
-    this.setState({ openDialog: false })
+    this.setState({ open: false })
   }
 
   render() {

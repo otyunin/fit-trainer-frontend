@@ -75,7 +75,6 @@ const exercises = (state = initialState, { type, payload }) => {
     case UPDATE_EXERCISES_FULFILLED: {
       return {
         ...state,
-        exercises: payload.exercises,
         error: null,
         loading: false,
       }
