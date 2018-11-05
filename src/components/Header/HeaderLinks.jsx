@@ -50,7 +50,7 @@ class HeaderLinks extends React.Component {
     const { open } = this.state
     return (
       <div>
-        <Hidden smDown implementation="css">
+        {user && (
           <div className={classes.manager}>
             <Button
               buttonRef={node => {
@@ -133,7 +133,7 @@ class HeaderLinks extends React.Component {
               )}
             </Poppers>
           </div>
-        </Hidden>
+        )}
       </div>
     )
   }

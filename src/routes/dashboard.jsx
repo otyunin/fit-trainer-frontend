@@ -11,63 +11,21 @@ import EditExercisesPage from 'views/EditExercises/EditExercises'
 import CreateWorkoutPage from 'views/CreateWorkout/CreateWorkout'
 import EditWorkoutPage from 'views/EditWorkout/EditWorkout'
 
-const isAuthorizedUser = user => (!user ? ([
-  {
+const dashboardRoutes = user => [
+  (!user && {
     path: '/signin',
     sidebarName: 'Sign in',
     navbarName: 'Sign in',
     icon: Person,
     component: SignInPage,
-  },
-  {
+  }) || null,
+  (!user && {
     path: '/signup',
     sidebarName: 'Sign up',
     navbarName: 'Sign up',
     icon: Person,
     component: SignUpPage,
-  },
-  { redirect: true, path: '/', to: '/signup', navbarName: 'Redirect' },
-]) : ([
-  {
-    path: '/dashboard',
-    sidebarName: 'Dashboard',
-    navbarName: 'Material Dashboard',
-    icon: Dashboard,
-    component: DashboardPage,
-  },
-  {
-    path: '/create-exercise',
-    sidebarName: 'New Excercise',
-    navbarName: 'New Excercise',
-    icon: Receipt,
-    component: CreateExercisePage,
-  },
-  {
-    path: '/edit-exercises',
-    sidebarName: 'Edit Excercises',
-    navbarName: 'Edit Excercises',
-    icon: Receipt,
-    component: EditExercisesPage,
-  },
-  {
-    path: '/create-workout',
-    sidebarName: 'New Workout',
-    navbarName: 'New Workout',
-    icon: Receipt,
-    component: CreateWorkoutPage,
-  },
-  {
-    path: '/edit-workout',
-    sidebarName: 'Edit Workout',
-    navbarName: 'Edit Workout',
-    icon: Receipt,
-    component: EditWorkoutPage,
-  },
-  { redirect: true, path: '/', to: '/dashboard', navbarName: 'Redirect' },
-]))
-
-const dashboardRoutes = user => [
-  ...isAuthorizedUser(user),
+  }) || null,
   {
     path: '/verify-email/:email/:verificationCode',
     sidebarName: 'Email verification',
@@ -75,6 +33,42 @@ const dashboardRoutes = user => [
     icon: Person,
     component: VerifyEmailPage,
   },
-]
+  (user && {
+    path: '/dashboard',
+    sidebarName: 'Dashboard',
+    navbarName: 'Material Dashboard',
+    icon: Dashboard,
+    component: DashboardPage,
+  }) || null,
+  (user && {
+    path: '/create-exercise',
+    sidebarName: 'New Excercise',
+    navbarName: 'New Excercise',
+    icon: Receipt,
+    component: CreateExercisePage,
+  }) || null,
+  (user && {
+    path: '/edit-exercises',
+    sidebarName: 'Edit Excercises',
+    navbarName: 'Edit Excercises',
+    icon: Receipt,
+    component: EditExercisesPage,
+  }) || null,
+  (user && {
+    path: '/create-workout',
+    sidebarName: 'New Workout',
+    navbarName: 'New Workout',
+    icon: Receipt,
+    component: CreateWorkoutPage,
+  }) || null,
+  (user && {
+    path: '/edit-workout',
+    sidebarName: 'Edit Workout',
+    navbarName: 'Edit Workout',
+    icon: Receipt,
+    component: EditWorkoutPage,
+  }) || null,
+  { redirect: true, path: '/', to: user ? '/dashboard' : '/signin', navbarName: 'Redirect' },
+].filter(route => !!route)
 
 export default dashboardRoutes
