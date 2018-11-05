@@ -9,7 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 // @material-ui/icons
-import { ArrowDownward, ArrowUpward, Cancel } from '@material-ui/icons'
+import { ArrowDownward, ArrowUpward, Cancel, CheckCircleOutline, ErrorOutline } from '@material-ui/icons'
 // core components
 import GridItem from 'components/Grid/GridItem.jsx'
 import GridContainer from 'components/Grid/GridContainer.jsx'
@@ -21,16 +21,17 @@ import CardFooter from 'components/Card/CardFooter'
 import Table from 'components/Table/Table'
 import CustomSelect from 'components/CustomSelect/CustomSelect'
 import CustomInput from 'components/CustomInput/CustomInput'
+import Snackbar from 'components/Snackbar/Snackbar'
 
 import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/createWorkoutStyle'
 import { connect } from 'react-redux'
-import { getExercises } from '../../redux/actions/exercises.action'
-import { updateExercises } from '../../api/exercise'
+import { getExercises, updateExercises } from 'redux/actions/exercises.action'
 
 class EditExercises extends React.Component {
   state = {
     exercises: [],
-    open: false,
+    openDialog: false,
+    openSnackbar: false,
     indexToRemove: null,
   }
 
@@ -51,11 +52,15 @@ class EditExercises extends React.Component {
   }
 
   handleCloseDialog = () => {
-    this.setState({ open: false, indexToRemove: null })
+    this.setState({ openDialog: false, indexToRemove: null })
+  }
+
+  handleCloseSnackbar = () => {
+    this.setState({ openSnackbar: false })
   }
 
   handleClickRemove = target => {
-    this.setState({ open: true, indexToRemove: target })
+    this.setState({ openDialog: true, indexToRemove: target })
   }
 
   handleClickUp = target => {
@@ -121,12 +126,15 @@ class EditExercises extends React.Component {
       return exercise
     })
     newExercises.splice(indexToRemove, 1)
-    this.setState({ exercises: newExercises, open: false })
+    this.setState({ exercises: newExercises, openDialog: false })
   }
 
   handleSubmit = () => {
     const { exercises } = this.state
-    updateExercises(exercises)
+    const { dispatch } = this.props
+    dispatch(updateExercises(exercises))
+    this.setState({ openSnackbar: true })
+    setTimeout(() => this.setState({ openSnackbar: false }), 6000)
   }
 
   handleChange = (event, target) => {
@@ -136,8 +144,8 @@ class EditExercises extends React.Component {
   }
 
   render() {
-    const { classes } = this.props
-    const { open, exercises } = this.state
+    const { classes, error } = this.props
+    const { openDialog, exercises, openSnackbar } = this.state
     return (
       <div>
         <GridContainer>
@@ -197,7 +205,7 @@ class EditExercises extends React.Component {
           </GridItem>
         </GridContainer>
         <Dialog
-          open={open}
+          open={openDialog}
           onClose={this.handleCloseDialog}
           aria-labelledby="dialog-title"
           aria-describedby="dialog-description"
@@ -217,6 +225,15 @@ class EditExercises extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
+        <Snackbar
+          place="tc"
+          color={error ? 'danger' : 'success'}
+          icon={error ? ErrorOutline : CheckCircleOutline}
+          message={error || 'Exercises successfully updated!'}
+          open={openSnackbar}
+          closeNotification={this.handleCloseSnackbar}
+          close
+        />
       </div>
     )
   }
@@ -226,13 +243,16 @@ EditExercises.propTypes = {
   classes: PropTypes.object.isRequired,
   exercises: PropTypes.array,
   dispatch: PropTypes.func.isRequired,
+  error: PropTypes.string,
 }
 
 EditExercises.defaultProps = {
   exercises: [],
+  error: '',
 }
 
 const mapStateToProps = store => ({
+  error: store.exercises.error,
   exercises: store.exercises.exercises,
 })
 

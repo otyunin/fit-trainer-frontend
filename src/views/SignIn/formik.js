@@ -25,8 +25,8 @@ const formik = withFormik({
         props.dispatch(push('/'))
       })
       .catch(() => {
-        setStatus({ open: true })
-        setTimeout(() => setStatus({ open: false }), 6000)
+        setStatus({ openDialog: true })
+        setTimeout(() => setStatus({ openDialog: false }), 6000)
         setSubmitting(false)
       })
   },

@@ -141,7 +141,7 @@ const SignIn = ({ ...props }) => {
           color={error ? 'danger' : 'success'}
           icon={error ? ErrorOutline : CheckCircleOutline}
           message={!error ? 'Welcome' : error}
-          open={status.open}
+          open={status.openDialog}
         />
       </GridContainer>
     </div>

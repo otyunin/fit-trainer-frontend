@@ -127,7 +127,7 @@ class CreateExercise extends React.Component {
             color={error ? 'danger' : 'success'}
             icon={error ? ErrorOutline : CheckCircleOutline}
             message={(!error ? status.message : error) || ''}
-            open={status.open}
+            open={status.openDialog}
           />
         </GridContainer>
       </div>
