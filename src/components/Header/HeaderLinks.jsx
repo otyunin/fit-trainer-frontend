@@ -26,14 +26,14 @@ class HeaderLinks extends React.Component {
   }
 
   handleToggle = () => {
-    this.setState(state => ({ open: !state.open }))
+    this.setState(state => ({ openDialog: !state.openDialog }))
   }
 
   handleClose = event => {
     if (this.anchorEl.contains(event.target)) {
       return
     }
-    this.setState({ open: false })
+    this.setState({ openDialog: false })
   }
 
   handleLogout = event => {
@@ -42,7 +42,7 @@ class HeaderLinks extends React.Component {
       return
     }
     dispatch(logout())
-    this.setState({ open: false })
+    this.setState({ openDialog: false })
   }
 
   render() {
@@ -150,7 +150,7 @@ HeaderLinks.defaultProps = {
 }
 
 const mapStateToProps = store => ({
-  user: store.user,
+  user: store.auth.user,
 })
 
 export default connect(mapStateToProps)(withStyles(headerLinksStyle)(HeaderLinks))

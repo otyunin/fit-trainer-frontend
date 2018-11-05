@@ -9,7 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 // @material-ui/icons
-import { ArrowDownward, ArrowUpward, Cancel } from '@material-ui/icons'
+import { ArrowDownward, ArrowUpward, Cancel, CheckCircleOutline, ErrorOutline } from '@material-ui/icons'
 // core components
 import GridItem from 'components/Grid/GridItem.jsx'
 import GridContainer from 'components/Grid/GridContainer.jsx'
@@ -21,27 +21,46 @@ import CardFooter from 'components/Card/CardFooter'
 import Table from 'components/Table/Table'
 import CustomSelect from 'components/CustomSelect/CustomSelect'
 import CustomInput from 'components/CustomInput/CustomInput'
+import Snackbar from 'components/Snackbar/Snackbar'
 
 import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/createWorkoutStyle'
+import { connect } from 'react-redux'
+import { getExercises, updateExercises } from 'redux/actions/exercises.action'
 
 class EditExercises extends React.Component {
   state = {
-    exercises: [
-      { order: 0, name: 'Exercise 1', type: 'kilograms' },
-      { order: 1, name: 'Exercise 2', type: 'grams' },
-      { order: 2, name: 'Exercise 3', type: 'seconds' },
-      { order: 3, name: 'Exercise 4', type: 'hours' },
-    ],
-    open: false,
+    exercises: [],
+    openDialog: false,
+    openSnackbar: false,
     indexToRemove: null,
   }
 
+  componentWillMount() {
+    const { dispatch } = this.props
+    dispatch(getExercises())
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    const { exercises } = this.props
+    if (nextProps.exercises && exercises !== nextProps.exercises) {
+      nextProps.exercises.map((exercise, index) => {
+        exercise.order = index
+        return exercise
+      })
+      this.setState({ exercises: nextProps.exercises })
+    }
+  }
+
   handleCloseDialog = () => {
-    this.setState({ open: false, indexToRemove: null })
+    this.setState({ openDialog: false, indexToRemove: null })
+  }
+
+  handleCloseSnackbar = () => {
+    this.setState({ openSnackbar: false })
   }
 
   handleClickRemove = target => {
-    this.setState({ open: true, indexToRemove: target })
+    this.setState({ openDialog: true, indexToRemove: target })
   }
 
   handleClickUp = target => {
@@ -107,12 +126,26 @@ class EditExercises extends React.Component {
       return exercise
     })
     newExercises.splice(indexToRemove, 1)
-    this.setState({ exercises: newExercises, open: false })
+    this.setState({ exercises: newExercises, openDialog: false })
+  }
+
+  handleSubmit = () => {
+    const { exercises } = this.state
+    const { dispatch } = this.props
+    dispatch(updateExercises(exercises))
+    this.setState({ openSnackbar: true })
+    setTimeout(() => this.setState({ openSnackbar: false }), 6000)
+  }
+
+  handleChange = (event, target) => {
+    const { exercises } = this.state
+    exercises[target].measurement = event.target.value
+    this.setState(exercises)
   }
 
   render() {
-    const { classes } = this.props
-    const { exercises, open } = this.state
+    const { classes, error } = this.props
+    const { openDialog, exercises, openSnackbar } = this.state
     return (
       <div>
         <GridContainer>
@@ -124,7 +157,7 @@ class EditExercises extends React.Component {
               <CardBody>
                 <Grid container alignItems="center">
                   <Table
-                    tableData={exercises.sort((a, b) => a.order - b.order).map((exercise, index) => [
+                    tableData={!exercises ? [] : exercises.sort((a, b) => a.order - b.order).map((exercise, index) => [
                       <CustomInput
                         labelText="Exercise name"
                         id="exercise"
@@ -139,10 +172,11 @@ class EditExercises extends React.Component {
                       <CustomSelect
                         labelText="Measurement type"
                         id="measurement-type"
-                        value={exercise.type}
-                        selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilimeters']}
+                        value={exercise.measurement}
+                        selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilometers']}
                         inputProps={{
                           name: 'measurementType',
+                          onChange: (event) => this.handleChange(event, index),
                         }}
                         labelProps={{ shrink: true }}
                         formControlProps={{
@@ -165,13 +199,13 @@ class EditExercises extends React.Component {
                 </Grid>
               </CardBody>
               <CardFooter>
-                <Button color="primary">Update exercises</Button>
+                <Button color="primary" onClick={this.handleSubmit}>Update exercises</Button>
               </CardFooter>
             </Card>
           </GridItem>
         </GridContainer>
         <Dialog
-          open={open}
+          open={openDialog}
           onClose={this.handleCloseDialog}
           aria-labelledby="dialog-title"
           aria-describedby="dialog-description"
@@ -191,6 +225,15 @@ class EditExercises extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
+        <Snackbar
+          place="tc"
+          color={error ? 'danger' : 'success'}
+          icon={error ? ErrorOutline : CheckCircleOutline}
+          message={error || 'Exercises successfully updated!'}
+          open={openSnackbar}
+          closeNotification={this.handleCloseSnackbar}
+          close
+        />
       </div>
     )
   }
@@ -198,6 +241,19 @@ class EditExercises extends React.Component {
 
 EditExercises.propTypes = {
   classes: PropTypes.object.isRequired,
+  exercises: PropTypes.array,
+  dispatch: PropTypes.func.isRequired,
+  error: PropTypes.string,
 }
 
-export default withStyles(createWorkoutStyle)(EditExercises)
+EditExercises.defaultProps = {
+  exercises: [],
+  error: '',
+}
+
+const mapStateToProps = store => ({
+  error: store.exercises.error,
+  exercises: store.exercises.exercises,
+})
+
+export default connect(mapStateToProps)(withStyles(createWorkoutStyle)(EditExercises))

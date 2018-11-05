@@ -1,7 +1,7 @@
 import { AppContainer } from 'react-hot-loader'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { applyMiddleware, createStore } from 'redux'
+import { applyMiddleware, combineReducers, createStore } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { Provider } from 'react-redux'
 import { createBrowserHistory } from 'history'
@@ -9,14 +9,20 @@ import { connectRouter, routerMiddleware } from 'connected-react-router'
 import thunk from 'redux-thunk'
 import promiseMiddleware from 'redux-promise-middleware'
 import auth from './redux/reducers/auth.reducer'
+import exercises from './redux/reducers/exercises.reducer'
 import App from './App'
 
 import 'assets/css/material-dashboard-react.css?v=1.5.0'
 
 const history = createBrowserHistory()
 
+const rootReducer = combineReducers({
+  auth,
+  exercises,
+})
+
 const store = createStore(
-  connectRouter(history)(auth),
+  connectRouter(history)(rootReducer),
   composeWithDevTools(
     applyMiddleware(
       routerMiddleware(history),
@@ -51,3 +57,5 @@ if (module.hot) {
     store.replaceReducer(connectRouter(history)(auth))
   })
 }
+
+export default store

@@ -19,10 +19,12 @@ class CustomSelect extends React.Component {
   }
 
   componentDidMount() {
-    const { selectData } = this.props
+    const { selectData, value } = this.props
 
-    if (selectData.length > 0) {
+    if (selectData.length > 0 && value === undefined) {
       this.setState({ selectedOption: selectData[0] })
+    } else if (value !== undefined) {
+      this.setState({ selectedOption: value })
     }
   }
 

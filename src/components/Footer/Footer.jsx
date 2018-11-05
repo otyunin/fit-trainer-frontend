@@ -13,13 +13,16 @@ const Footer = ({ classes, routes }) => (
     <div className={classes.container}>
       <div className={classes.left}>
         <List className={classes.list}>
-          {routes.filter(route => !(route.path.indexOf('/verify-email') + 1)).map((route, key) => (
-            <ListItem key={key} className={classes.inlineBlock}>
-              <Link to={route.path}>
-                {route.sidebarName}
-              </Link>
-            </ListItem>
-          ))}
+          {routes.map((route, key) => {
+            if (route.invisible) return null
+            return (
+              <ListItem key={key} className={classes.inlineBlock}>
+                <Link to={route.path}>
+                  {route.sidebarName}
+                </Link>
+              </ListItem>
+            )
+          })}
         </List>
       </div>
       <p className={classes.right}>

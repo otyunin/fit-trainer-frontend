@@ -17,10 +17,10 @@ import dashboardRoutes from 'routes/dashboard.jsx'
 
 import dashboardStyle from 'assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx'
 
-import image from 'assets/img/sidebar-4.jpg'
-import logo from 'assets/img/reactlogo.png'
-import { SIGN_IN_FULFILLED } from '../../redux/actions/auth.action'
-import getUser from '../../utils/storage'
+import image from 'assets/img/sidebar-5.jpg'
+import logo from 'assets/img/favicon.png'
+import { SIGN_IN_FULFILLED } from 'redux/actions/auth.action'
+import { getUser } from 'utils/storage'
 
 const switchRoutes = user => (
   <Switch>
@@ -122,7 +122,7 @@ Dashboard.defaultProps = {
 }
 
 const mapStateToProps = store => ({
-  user: store.user,
+  user: store.auth.user,
 })
 
 export default connect(mapStateToProps)(withStyles(dashboardStyle)(Dashboard))

@@ -141,7 +141,7 @@ const SignIn = ({ ...props }) => {
           color={error ? 'danger' : 'success'}
           icon={error ? ErrorOutline : CheckCircleOutline}
           message={!error ? 'Welcome' : error}
-          open={status.open}
+          open={status.openDialog}
         />
       </GridContainer>
     </div>
@@ -166,7 +166,7 @@ SignIn.defaultProps = {
 }
 
 const mapStateToProps = store => ({
-  error: store.errorLogin,
+  error: store.auth.errorLogin,
 })
 
 export default connect(mapStateToProps)(formik(withStyles(styles)(SignIn)))

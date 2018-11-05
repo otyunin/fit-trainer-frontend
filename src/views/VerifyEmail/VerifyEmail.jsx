@@ -61,12 +61,12 @@ class VerifyEmail extends React.Component {
     event.preventDefault()
     dispatch(verifyEmail(this.state))
     if (error) {
-      this.setState({ open: true })
+      this.setState({ openDialog: true })
     } else dispatch(push('/'))
   }
 
   handleClose = () => {
-    this.setState({ open: false })
+    this.setState({ openDialog: false })
   }
 
   render() {
@@ -154,7 +154,7 @@ VerifyEmail.defaultProps = {
 }
 
 const mapStateToProps = store => ({
-  error: store.errorVerify,
+  error: store.auth.errorVerify,
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(VerifyEmail))
