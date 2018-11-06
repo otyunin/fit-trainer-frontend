@@ -18,16 +18,6 @@ class CustomSelect extends React.Component {
     selectedOption: '',
   }
 
-  componentDidMount() {
-    const { selectData, value } = this.props
-
-    if (selectData.length > 0 && value === undefined) {
-      this.setState({ selectedOption: selectData[0] })
-    } else if (value !== undefined) {
-      this.setState({ selectedOption: value })
-    }
-  }
-
   handleChange = event => {
     this.setState({ selectedOption: event.target.value })
   }
@@ -44,6 +34,8 @@ class CustomSelect extends React.Component {
       success,
       selectData,
       value,
+      showKey,
+      returnKey,
     } = this.props
 
     const { selectedOption } = this.state
@@ -90,9 +82,9 @@ class CustomSelect extends React.Component {
               <MenuItem
                 key={key}
                 className={classes.dropdownItem}
-                value={option}
+                value={returnKey ? option[returnKey] : option}
               >
-                {option}
+                {showKey ? option[showKey] : option}
               </MenuItem>,
             ])
           ) : (
@@ -125,6 +117,8 @@ CustomSelect.propTypes = {
   success: PropTypes.bool,
   selectData: PropTypes.array,
   value: PropTypes.string,
+  showKey: PropTypes.string,
+  returnKey: PropTypes.string,
 }
 
 CustomSelect.defaultProps = {
@@ -137,6 +131,8 @@ CustomSelect.defaultProps = {
   success: false,
   selectData: [],
   value: undefined,
+  showKey: '',
+  returnKey: '',
 }
 
 export default withStyles(customSelectStyle)(CustomSelect)

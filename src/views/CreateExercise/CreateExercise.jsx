@@ -94,7 +94,7 @@ class CreateExercise extends React.Component {
                       <CustomSelect
                         labelText="Measurement type"
                         id="measurement-type"
-                        selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilimeters']}
+                        selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilometers']}
                         labelProps={{ shrink: true }}
                         value={values.measurement}
 
