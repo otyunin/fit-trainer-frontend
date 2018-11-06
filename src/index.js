@@ -10,6 +10,7 @@ import thunk from 'redux-thunk'
 import promiseMiddleware from 'redux-promise-middleware'
 import auth from './redux/reducers/auth.reducer'
 import exercises from './redux/reducers/exercises.reducer'
+import workout from './redux/reducers/workout.reducer'
 import App from './App'
 
 import 'assets/css/material-dashboard-react.css?v=1.5.0'
@@ -19,6 +20,7 @@ const history = createBrowserHistory()
 const rootReducer = combineReducers({
   auth,
   exercises,
+  workout,
 })
 
 const store = createStore(

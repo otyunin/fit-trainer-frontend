@@ -11,7 +11,7 @@ import DialogContent from '@material-ui/core/DialogContent/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText/DialogContentText'
 import DialogActions from '@material-ui/core/DialogActions/DialogActions'
 // @material-ui/icons
-import { ArrowDownward, ArrowUpward, Cancel } from '@material-ui/icons'
+import { ArrowDownward, ArrowUpward, Cancel, CheckCircleOutline, ErrorOutline } from '@material-ui/icons'
 // core components
 import GridItem from 'components/Grid/GridItem.jsx'
 import GridContainer from 'components/Grid/GridContainer.jsx'
@@ -27,12 +27,15 @@ import CustomInput from 'components/CustomInput/CustomInput'
 import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/createWorkoutStyle'
 import { connect } from 'react-redux'
 import { getExercises } from 'redux/actions/exercises.action'
+import { createWorkout } from '../../redux/actions/workout.action'
+import Snackbar from '../../components/Snackbar/Snackbar'
 
 class CreateWorkout extends React.Component {
   state = {
     exercises: [],
     workout: [],
     openDialog: false,
+    openSnackbar: false,
     indexToRemove: null,
   }
 
@@ -126,6 +129,10 @@ class CreateWorkout extends React.Component {
     this.setState({ openDialog: false, indexToRemove: null })
   }
 
+  handleCloseSnackbar = () => {
+    this.setState({ openSnackbar: false })
+  }
+
   handleClickRemove = target => {
     this.setState({ openDialog: true, indexToRemove: target })
   }
@@ -142,9 +149,20 @@ class CreateWorkout extends React.Component {
     this.setState({ workout: newWorkout, openDialog: false })
   }
 
+  handleSubmit = () => {
+    const { workout } = this.state
+    const { dispatch } = this.props
+    const newWorkout = workout.map(workoutExercise => ({
+      ...workoutExercise, exercise: workoutExercise.exercise._id,
+    }))
+    dispatch(createWorkout(newWorkout))
+    this.setState({ openSnackbar: true })
+    setTimeout(() => this.setState({ openSnackbar: false }), 6000)
+  }
+
   render() {
-    const { classes, exercises } = this.props
-    const { workout, openDialog } = this.state
+    const { classes, exercises, error } = this.props
+    const { workout, openDialog, openSnackbar } = this.state
     return (
       <div>
         <GridContainer>
@@ -225,7 +243,7 @@ class CreateWorkout extends React.Component {
                 </Grid>
               </CardBody>
               <CardFooter>
-                <Button color="primary">Create workout</Button>
+                <Button color="primary" onClick={this.handleSubmit}>Create workout</Button>
               </CardFooter>
             </Card>
           </GridItem>
@@ -250,6 +268,15 @@ class CreateWorkout extends React.Component {
               </Button>
             </DialogActions>
           </Dialog>
+          <Snackbar
+            place="tc"
+            color={error ? 'danger' : 'success'}
+            icon={error ? ErrorOutline : CheckCircleOutline}
+            message={error || 'Workout successfully created!'}
+            open={openSnackbar}
+            closeNotification={this.handleCloseSnackbar}
+            close
+          />
         </GridContainer>
       </div>
     )
@@ -260,14 +287,17 @@ CreateWorkout.propTypes = {
   classes: PropTypes.object.isRequired,
   exercises: PropTypes.array,
   dispatch: PropTypes.func.isRequired,
+  error: PropTypes.string,
 }
 
 CreateWorkout.defaultProps = {
   exercises: [],
+  error: '',
 }
 
 const mapStateToProps = store => ({
   exercises: store.exercises.exercises,
+  error: store.workout.error,
 })
 
 export default connect(mapStateToProps)(withStyles(createWorkoutStyle)(CreateWorkout))
