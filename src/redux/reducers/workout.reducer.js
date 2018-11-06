@@ -2,6 +2,9 @@ import {
   NEW_WORKOUT_PENDING,
   NEW_WORKOUT_REJECTED,
   NEW_WORKOUT_FULFILLED,
+  GET_WORKOUT_PENDING,
+  GET_WORKOUT_REJECTED,
+  GET_WORKOUT_FULFILLED,
 } from '../actions/workout.action'
 
 const initialState = {
@@ -12,6 +15,7 @@ const initialState = {
 
 const workout = (state = initialState, { type, payload }) => {
   switch (type) {
+    // CREATE
     case NEW_WORKOUT_PENDING:
       return {
         ...state,
@@ -29,6 +33,28 @@ const workout = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: null,
+        loading: false,
+      }
+    }
+    // GET
+    case GET_WORKOUT_PENDING:
+      return {
+        ...state,
+        loading: true,
+      }
+
+    case GET_WORKOUT_REJECTED:
+      return {
+        ...state,
+        error: payload,
+        loading: false,
+      }
+
+    case GET_WORKOUT_FULFILLED: {
+      return {
+        ...state,
+        error: null,
+        workout: payload,
         loading: false,
       }
     }
