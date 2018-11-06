@@ -20,7 +20,6 @@ export const getWorkout = async () => {
 
   if (err) throw error(err)
   if (!res.data.success) throw res.data.message
-
   return {
     workout: res.data.workout,
   }

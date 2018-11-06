@@ -37,13 +37,13 @@ class EditWorkout extends React.Component {
   componentWillReceiveProps(nextProps, nextContext) {
     const { workout } = this.props
     if (nextProps.workout && workout !== nextProps.workout) {
-      this.setState({ workout: nextProps.workout.workout })
+      this.setState({ workout: nextProps.workout })
     }
   }
 
-  handleChange = (event) => {
+  handleChange = (event, target) => {
     const { workout } = this.state
-    workout[event.target.name] = event.target.value
+    workout.exercises[target][event.target.name] = event.target.value
     this.setState(workout)
   }
 
@@ -64,15 +64,18 @@ class EditWorkout extends React.Component {
                 </Grid>
                 <Grid container alignItems="center">
                   <Table
-                    tableData={!workout ? [] : workout.exercises.map(workoutExercise => [
+                    tableData={!workout ? [] : workout.exercises.map((workoutExercise, index) => [
                       <CustomSelect
                         labelText="Exercise name"
                         id="exercise"
-                        value={workoutExercise.exercise.name}
-                        selectData={!exercises ? [] : exercises.map(exercise => exercise.name)}
+                        selectData={!exercises ? [] : exercises.map(exercise => exercise)}
+                        value={workoutExercise.exercise._id}
+                        showKey="name"
+                        returnKey="_id"
                         inputProps={{
                           name: 'exercise',
-                          onChange: (event) => this.handleChange(event),
+                          onChange: (event) => this.handleChangeSelect(event, index),
+                          renderValue: () => workoutExercise.exercise.name,
                         }}
                         labelProps={{ shrink: true }}
                         formControlProps={{
@@ -87,8 +90,9 @@ class EditWorkout extends React.Component {
                         }}
                         inputProps={{
                           name: 'repeats',
-                          onChange: (event) => this.handleChange(event),
+                          type: 'number',
                           value: workoutExercise.repeats,
+                          onChange: (event) => this.handleChange(event, index),
                         }}
                       />,
                       <CustomInput
@@ -99,11 +103,14 @@ class EditWorkout extends React.Component {
                         }}
                         inputProps={{
                           name: 'measurement',
-                          onChange: (event) => this.handleChange(event),
+                          type: 'number',
                           value: workoutExercise.measurement,
+                          onChange: (event) => this.handleChange(event, index),
                         }}
                       />,
-                      <FormLabel>kg</FormLabel>,
+                      <FormLabel>
+                        {workoutExercise.exercise.measurement}
+                      </FormLabel>,
                       <div>
                         <Button color="info">
                           <ArrowUpward />

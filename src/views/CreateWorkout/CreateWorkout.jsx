@@ -53,7 +53,7 @@ class CreateWorkout extends React.Component {
 
   handleAddExercises = () => {
     const { workout } = this.state
-    const body = { exercise: {}, repeats: '', measurement: '', order: workout.length }
+    const body = { exercise: {}, repeats: 0, measurement: '', order: workout.length }
     workout.push(body)
     this.setState({ workout })
   }
@@ -206,6 +206,7 @@ class CreateWorkout extends React.Component {
                           }}
                           inputProps={{
                             name: 'repeats',
+                            type: 'number',
                             value: workoutExercises.repeats,
                             onChange: (event) => this.handleChange(event, index),
                           }}
@@ -220,6 +221,7 @@ class CreateWorkout extends React.Component {
                           }}
                           inputProps={{
                             name: 'measurement',
+                            type: 'number',
                             value: workoutExercises.measurement,
                             onChange: (event) => this.handleChange(event, index),
                           }}

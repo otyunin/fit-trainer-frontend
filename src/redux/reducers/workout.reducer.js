@@ -54,7 +54,7 @@ const workout = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: null,
-        workout: payload,
+        workout: payload.workout,
         loading: false,
       }
     }
