@@ -1,7 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
-import { NavLink } from 'react-router-dom'
+import { matchPath, NavLink } from 'react-router-dom'
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles'
 import Drawer from '@material-ui/core/Drawer'
@@ -21,7 +21,12 @@ const Sidebar = ({ ...props }) => {
   // verifies if routeName is the one active (in browser input)
   function activeRoute(routeName) {
     const { location } = props
-    return location.pathname.indexOf(routeName) > -1
+    const match = matchPath(location.pathname, {
+      path: routeName,
+      exact: true,
+      strict: false,
+    })
+    return !!match
   }
 
   const { classes, color, logo, image, logoText, routes, open, handleDrawerToggle } = props
@@ -30,17 +35,21 @@ const Sidebar = ({ ...props }) => {
       {routes.map((prop, key) => {
         if (prop.redirect) return null
         if (prop.invisible) return null
-        if (prop.path.match('/create-workout')) prop.path = `/create-workout/${moment().format('MM-DD-YYYY')}`
-        if (prop.path.match('/edit-workout')) prop.path = `/edit-workout/${moment().format('MM-DD-YYYY')}`
         const listItemClasses = classNames({
           [` ${classes[color]}`]: activeRoute(prop.path),
         })
         const whiteFontClasses = classNames({
           [` ${classes.whiteFont}`]: activeRoute(prop.path),
         })
+
+        let workoutPath = null
+
+        if (prop.path.match('/create-workout')) workoutPath = `/create-workout/${moment().format('MM-DD-YYYY')}`
+        if (prop.path.match('/edit-workout')) workoutPath = `/edit-workout/${moment().format('MM-DD-YYYY')}`
+
         return (
           <NavLink
-            to={prop.path}
+            to={workoutPath || prop.path}
             className={classes.item}
             activeClassName="active"
             key={key}
