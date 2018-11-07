@@ -4,8 +4,8 @@ const config = () => ({
   headers: { Authorization: localStorage.getItem('JWT_TOKEN') },
 })
 
-export const createWorkout = async data => {
-  const [err, res] = await post('/workout/', data, config)
+export const createWorkout = async (data, date) => {
+  const [err, res] = await post(`/workout/${date}`, data, config)
 
   if (err) throw error(err)
   if (!res.data.success) throw res.data.message
@@ -15,8 +15,8 @@ export const createWorkout = async data => {
   }
 }
 
-export const getWorkout = async () => {
-  const [err, res] = await get('/workout/', config)
+export const getWorkout = async (date) => {
+  const [err, res] = await get(`/workout/${date}`, config)
 
   if (err) throw error(err)
   if (!res.data.success) throw res.data.message
@@ -25,8 +25,8 @@ export const getWorkout = async () => {
   }
 }
 
-export const updateWorkout = async data => {
-  const [err, res] = await put('/workout/', data, config)
+export const updateWorkout = async (data, date) => {
+  const [err, res] = await put(`/workout/${date}`, data, config)
 
   if (err) throw error(err)
 

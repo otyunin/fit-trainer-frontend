@@ -11,7 +11,7 @@ import DialogContent from '@material-ui/core/DialogContent/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText/DialogContentText'
 import DialogActions from '@material-ui/core/DialogActions/DialogActions'
 // @material-ui/icons
-import { ArrowDownward, ArrowUpward, Cancel, CheckCircleOutline, ErrorOutline } from '@material-ui/icons'
+import { ArrowDownward, ArrowUpward, Cancel, CheckCircleOutline, ErrorOutline, Today } from '@material-ui/icons'
 // core components
 import GridItem from 'components/Grid/GridItem.jsx'
 import GridContainer from 'components/Grid/GridContainer.jsx'
@@ -23,12 +23,13 @@ import CardFooter from 'components/Card/CardFooter'
 import Table from 'components/Table/Table'
 import CustomSelect from 'components/CustomSelect/CustomSelect'
 import CustomInput from 'components/CustomInput/CustomInput'
+import Snackbar from 'components/Snackbar/Snackbar'
 
 import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/createWorkoutStyle'
 import { connect } from 'react-redux'
 import { getExercises } from 'redux/actions/exercises.action'
-import { getWorkout, updateWorkout } from '../../redux/actions/workout.action'
-import Snackbar from '../../components/Snackbar/Snackbar'
+import { getWorkout, updateWorkout } from 'redux/actions/workout.action'
+import moment from 'moment'
 
 class EditWorkout extends React.Component {
   state = {
@@ -40,8 +41,8 @@ class EditWorkout extends React.Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props
-    dispatch(getWorkout())
+    const { dispatch, match } = this.props
+    dispatch(getWorkout(match.params.date))
     dispatch(getExercises())
   }
 
@@ -153,26 +154,37 @@ class EditWorkout extends React.Component {
 
   handleSubmit = () => {
     const { workoutExercises, workout } = this.state
-    const { dispatch } = this.props
+    const { dispatch, match } = this.props
     const newExercises = workoutExercises.map(workoutExercise => ({
       ...workoutExercise, exercise: workoutExercise.exercise._id,
     }))
     workout.exercises = newExercises
-    dispatch(updateWorkout(workout))
+    dispatch(updateWorkout(workout, match.params.date))
     this.setState({ openSnackbar: true })
     setTimeout(() => this.setState({ openSnackbar: false }), 6000)
   }
 
   render() {
-    const { classes, exercises, error } = this.props
+    const { classes, exercises, error, match } = this.props
     const { workoutExercises, openDialog, openSnackbar } = this.state
+
     return (
       <div>
         <GridContainer>
           <GridItem xs={12} sm={12} md={10}>
             <Card>
               <CardHeader color="primary" className={classes.cardHeader}>
-                <h4 className={classes.cardTitleWhite}>Edit workout</h4>
+                <GridContainer justify="space-between">
+                  <GridItem>
+                    <h4 className={classes.cardTitleWhite}>Edit workout</h4>
+                  </GridItem>
+                  <GridItem>
+                    <Grid container alignItems="center">
+                      <Today className={classes.dateIcon} />
+                      {moment(match.params.date, 'DD-MM-YYYY').format('ddd, MMM Do YYYY')}
+                    </Grid>
+                  </GridItem>
+                </GridContainer>
               </CardHeader>
               <CardBody>
                 <Grid container>
@@ -290,6 +302,7 @@ class EditWorkout extends React.Component {
 
 EditWorkout.propTypes = {
   classes: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
   exercises: PropTypes.array,
   workout: PropTypes.object,
   dispatch: PropTypes.func.isRequired,

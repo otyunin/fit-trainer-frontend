@@ -55,20 +55,20 @@ const dashboardRoutes = user => [
     component: EditExercisesPage,
   }) || null,
   (user && {
-    path: '/create-workout',
+    path: '/create-workout/:date',
     sidebarName: 'New Workout',
     navbarName: 'New Workout',
     icon: ListAlt,
     component: CreateWorkoutPage,
   }) || null,
   (user && {
-    path: '/edit-workout',
+    path: '/edit-workout/:date',
     sidebarName: 'Edit Workout',
     navbarName: 'Edit Workout',
     icon: Edit,
     component: EditWorkoutPage,
   }) || null,
-  { redirect: true, path: '/', to: user ? '/dashboard' : '/signin', navbarName: 'Redirect' },
+  { redirect: true, exact: true, path: '/', to: user ? '/dashboard' : '/signin', navbarName: 'Redirect' },
 ].filter(route => !!route)
 
 export default dashboardRoutes

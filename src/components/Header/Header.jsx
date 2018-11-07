@@ -24,6 +24,9 @@ function Header({ ...props }) {
       if (prop.path === location.pathname) {
         name = prop.navbarName
       }
+      if (prop.path.match('/edit-workout') || prop.path.match('/create-workout')) {
+        name = prop.navbarName
+      }
       return null
     })
     return name

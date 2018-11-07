@@ -15,23 +15,23 @@ export const UPDATE_WORKOUT_PENDING = 'UPDATE_WORKOUT_PENDING'
 export const UPDATE_WORKOUT_REJECTED = 'UPDATE_WORKOUT_REJECTED'
 export const UPDATE_WORKOUT_FULFILLED = 'UPDATE_WORKOUT_FULFILLED'
 
-export const createWorkout = data => async dispatch => {
+export const createWorkout = (data, date) => async dispatch => {
   await dispatch({
     type: NEW_WORKOUT,
-    payload: API.createWorkout(data),
+    payload: API.createWorkout(data, date),
   })
 }
 
-export const getWorkout = () => async dispatch => {
+export const getWorkout = date => async dispatch => {
   await dispatch({
     type: GET_WORKOUT,
-    payload: API.getWorkout(),
+    payload: API.getWorkout(date),
   })
 }
 
-export const updateWorkout = data => async dispatch => {
+export const updateWorkout = (data, date) => async dispatch => {
   await dispatch({
     type: UPDATE_WORKOUT,
-    payload: API.updateWorkout(data),
+    payload: API.updateWorkout(data, date),
   })
 }

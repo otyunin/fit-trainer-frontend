@@ -15,6 +15,7 @@ import Icon from '@material-ui/core/Icon'
 import HeaderLinks from 'components/Header/HeaderLinks.jsx'
 
 import sidebarStyle from 'assets/jss/material-dashboard-react/components/sidebarStyle.jsx'
+import moment from 'moment'
 
 const Sidebar = ({ ...props }) => {
   // verifies if routeName is the one active (in browser input)
@@ -29,6 +30,8 @@ const Sidebar = ({ ...props }) => {
       {routes.map((prop, key) => {
         if (prop.redirect) return null
         if (prop.invisible) return null
+        if (prop.path.match('/create-workout')) prop.path = `/create-workout/${moment().format('DD-MM-YYYY')}`
+        if (prop.path.match('/edit-workout')) prop.path = `/edit-workout/${moment().format('DD-MM-YYYY')}`
         const listItemClasses = classNames({
           [` ${classes[color]}`]: activeRoute(prop.path),
         })
