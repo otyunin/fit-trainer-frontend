@@ -181,7 +181,7 @@ class EditWorkout extends React.Component {
                   <GridItem>
                     <Grid container alignItems="center">
                       <Today className={classes.dateIcon} />
-                      {moment(match.params.date, 'DD-MM-YYYY').format('ddd, MMM Do YYYY')}
+                      {moment(match.params.date, 'MM-DD-YYYY').format('ddd, MMM Do YYYY')}
                     </Grid>
                   </GridItem>
                 </GridContainer>
@@ -192,7 +192,7 @@ class EditWorkout extends React.Component {
                 </Grid>
                 <Grid container alignItems="center">
                   <Table
-                    tableData={workoutExercises.sort((a, b) => a.order - b.order)
+                    tableData={!workoutExercises ? [] : workoutExercises.sort((a, b) => a.order - b.order)
                       .map((workoutExercise, index) => [
                         <CustomSelect
                           labelText="Exercise name"

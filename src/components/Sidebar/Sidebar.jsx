@@ -30,8 +30,8 @@ const Sidebar = ({ ...props }) => {
       {routes.map((prop, key) => {
         if (prop.redirect) return null
         if (prop.invisible) return null
-        if (prop.path.match('/create-workout')) prop.path = `/create-workout/${moment().format('DD-MM-YYYY')}`
-        if (prop.path.match('/edit-workout')) prop.path = `/edit-workout/${moment().format('DD-MM-YYYY')}`
+        if (prop.path.match('/create-workout')) prop.path = `/create-workout/${moment().format('MM-DD-YYYY')}`
+        if (prop.path.match('/edit-workout')) prop.path = `/edit-workout/${moment().format('MM-DD-YYYY')}`
         const listItemClasses = classNames({
           [` ${classes[color]}`]: activeRoute(prop.path),
         })

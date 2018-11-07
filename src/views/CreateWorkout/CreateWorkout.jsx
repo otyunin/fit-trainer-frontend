@@ -177,7 +177,7 @@ class CreateWorkout extends React.Component {
                   <GridItem>
                     <Grid container alignItems="center">
                       <Today className={classes.dateIcon} />
-                      {moment(match.params.date, 'DD-MM-YYYY').format('ddd, MMM Do YYYY')}
+                      {moment(match.params.date, 'MM-DD-YYYY').format('ddd, MMM Do YYYY')}
                     </Grid>
                   </GridItem>
                 </GridContainer>
