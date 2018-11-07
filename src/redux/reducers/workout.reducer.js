@@ -5,6 +5,9 @@ import {
   GET_WORKOUT_PENDING,
   GET_WORKOUT_REJECTED,
   GET_WORKOUT_FULFILLED,
+  UPDATE_WORKOUT_PENDING,
+  UPDATE_WORKOUT_REJECTED,
+  UPDATE_WORKOUT_FULFILLED,
 } from '../actions/workout.action'
 
 const initialState = {
@@ -55,6 +58,27 @@ const workout = (state = initialState, { type, payload }) => {
         ...state,
         error: null,
         workout: payload.workout,
+        loading: false,
+      }
+    }
+    // UPDATE
+    case UPDATE_WORKOUT_PENDING:
+      return {
+        ...state,
+        loading: true,
+      }
+
+    case UPDATE_WORKOUT_REJECTED:
+      return {
+        ...state,
+        error: payload,
+        loading: false,
+      }
+
+    case UPDATE_WORKOUT_FULFILLED: {
+      return {
+        ...state,
+        error: null,
         loading: false,
       }
     }
