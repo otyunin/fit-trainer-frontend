@@ -44,8 +44,8 @@ const Sidebar = ({ ...props }) => {
 
         let workoutPath = null
 
-        if (prop.path.match('/create-workout')) workoutPath = `/create-workout/${moment().format('MM-DD-YYYY')}`
-        if (prop.path.match('/edit-workout')) workoutPath = `/edit-workout/${moment().format('MM-DD-YYYY')}`
+        if (prop.path.match('/create-workout')) workoutPath = `/create-workout/${moment().format('YYYY-MM-DD')}`
+        if (prop.path.match('/edit-workout')) workoutPath = `/edit-workout/${moment().format('YYYY-MM-DD')}`
 
         return (
           <NavLink

@@ -1,32 +1,47 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
 import Grid from '@material-ui/core/Grid/Grid'
-import InfiniteCalendar from 'react-infinite-calendar'
-import 'react-infinite-calendar/styles.css'
 
 import GridContainer from 'components/Grid/GridContainer.jsx'
 import Button from 'components/CustomButtons/Button'
+import Calendar from 'components/Calendar'
+import { getWorkoutDates } from 'redux/actions/workout.action'
+import { connect } from 'react-redux'
 
-const today = new Date()
-const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7)
+class Dashboard extends React.Component {
+  componentDidMount() {
+    const { dispatch } = this.props
+    dispatch(getWorkoutDates())
+  }
 
-const Dashboard = () => (
-  <div>
-    <GridContainer style={{ maxWidth: 400 }}>
-      <Grid container justify="space-between">
-        <Button color="primary">Add new exercise</Button>
-        <Button color="primary">Add new workout</Button>
-      </Grid>
-      <InfiniteCalendar
-        width="100%"
-        height={400}
-        selected={today}
-        disabledDays={[]}
-        minDate={lastWeek}
-      />
-    </GridContainer>
-  </div>
-)
+  render() {
+    const { dates } = this.props
+    return (
+      <div>
+        <GridContainer style={{ maxWidth: 400 }}>
+          <Grid container justify="space-between">
+            <Button color="primary">Add new exercise</Button>
+            <Button color="primary">Add new workout</Button>
+          </Grid>
+          <Calendar dates={dates} />
+        </GridContainer>
+      </div>
+    )
+  }
+}
 
-Dashboard.propTypes = {}
+Dashboard.propTypes = {
+  dates: PropTypes.array,
+  dispatch: PropTypes.func.isRequired,
+}
 
-export default Dashboard
+Dashboard.defaultProps = {
+  dates: [],
+}
+
+const mapStateToProps = store => ({
+  dates: store.workout.dates,
+})
+
+export default connect(mapStateToProps)(Dashboard)

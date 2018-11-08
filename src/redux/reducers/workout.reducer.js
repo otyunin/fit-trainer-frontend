@@ -8,11 +8,15 @@ import {
   UPDATE_WORKOUT_PENDING,
   UPDATE_WORKOUT_REJECTED,
   UPDATE_WORKOUT_FULFILLED,
+  GET_WORKOUT_DATES_PENDING,
+  GET_WORKOUT_DATES_REJECTED,
+  GET_WORKOUT_DATES_FULFILLED,
 } from '../actions/workout.action'
 
 const initialState = {
   loading: false,
   workout: null,
+  dates: [],
   error: null,
 }
 
@@ -58,6 +62,28 @@ const workout = (state = initialState, { type, payload }) => {
         ...state,
         error: null,
         workout: payload.workout,
+        loading: false,
+      }
+    }
+    // GET DATES
+    case GET_WORKOUT_DATES_PENDING:
+      return {
+        ...state,
+        loading: true,
+      }
+
+    case GET_WORKOUT_DATES_REJECTED:
+      return {
+        ...state,
+        error: payload,
+        loading: false,
+      }
+
+    case GET_WORKOUT_DATES_FULFILLED: {
+      return {
+        ...state,
+        error: null,
+        dates: payload.dates,
         loading: false,
       }
     }
