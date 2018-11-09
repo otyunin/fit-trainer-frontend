@@ -5,8 +5,6 @@ import 'react-infinite-calendar/styles.css'
 import moment from 'moment'
 import multipleDateInterpolation from 'utils/dateInterpolation'
 
-const today = new Date()
-
 class CustomCalendar extends React.Component {
   state = {
     selected: [],
@@ -44,7 +42,6 @@ class CustomCalendar extends React.Component {
         width="100%"
         height={400}
         selected={dates}
-        minDate={today}
         interpolateSelection={multipleDateInterpolation(dates)}
         theme={{
           selectionColor: this.chooseColor,

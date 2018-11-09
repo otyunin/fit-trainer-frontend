@@ -3,12 +3,13 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core'
 
 import Grid from '@material-ui/core/Grid/Grid'
-import { FiberManualRecord } from '@material-ui/icons'
+import { ErrorOutline, FiberManualRecord } from '@material-ui/icons'
 import Button from 'components/CustomButtons/Button'
 import Calendar from 'components/Calendar'
 import Card from 'components/Card/Card'
 import CardBody from 'components/Card/CardBody'
 import GridContainer from 'components/Grid/GridContainer'
+import Snackbar from 'components/Snackbar/Snackbar'
 
 import dashboardStyle from 'assets/jss/material-dashboard-react/views/dashboardStyle'
 
@@ -22,7 +23,11 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props)
     this.handleSelectDate = this.handleSelectDate.bind(this)
-    this.state = { selected: null }
+    this.state = {
+      selected: null,
+      error: '',
+      open: false,
+    }
   }
 
   componentDidMount() {
@@ -39,13 +44,25 @@ class Dashboard extends React.Component {
     const { dispatch } = this.props
     const { selected } = this.state
     if (selected) {
-      dispatch(push(`/create-workout/${selected}`))
+      if (moment(selected, 'YYYY-MM-DD').format() >= moment()) {
+        dispatch(push(`/create-workout/${selected}`))
+      } else {
+        this.setState({
+          error: 'You cannot create a workout on a date earlier than the current one',
+          open: true,
+        })
+        setTimeout(() => this.setState({ open: false }), 6000)
+      }
     }
+  }
+
+  handleCloseSnackbar = () => {
+    this.setState({ open: false })
   }
 
   render() {
     const { dates, classes } = this.props
-    const { selected } = this.state
+    const { selected, open, error } = this.state
     return (
       <div>
         <GridContainer style={{ maxWidth: 400 }}>
@@ -71,6 +88,15 @@ class Dashboard extends React.Component {
           </Card>
           <Calendar dates={dates} onSelectDate={this.handleSelectDate} />
         </GridContainer>
+        <Snackbar
+          place="tc"
+          color="danger"
+          icon={ErrorOutline}
+          message={error}
+          open={open}
+          closeNotification={this.handleCloseSnackbar}
+          close
+        />
       </div>
     )
   }
