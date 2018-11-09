@@ -55,8 +55,10 @@ class CreateWorkout extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { success, dispatch } = this.props
-    if (success) {
-      dispatch(push('/dashboard'))
+    if (prevProps.success !== success) {
+      if (success) {
+        dispatch(push('/dashboard'))
+      }
     }
   }
 
