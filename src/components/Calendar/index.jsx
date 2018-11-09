@@ -1,52 +1,52 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import InfiniteCalendar, {
-  Calendar,
-  defaultMultipleDateInterpolation,
-  withMultipleDates,
-} from 'react-infinite-calendar'
+import InfiniteCalendar, { Calendar, withMultipleDates } from 'react-infinite-calendar'
 import 'react-infinite-calendar/styles.css'
 import moment from 'moment'
+import multipleDateInterpolation from 'utils/dateInterpolation'
 
 const today = new Date()
-const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7)
 
 class CustomCalendar extends React.Component {
   state = {
     selected: [],
   }
 
-  componentDidMount() {
-    const { dates } = this.props
-    this.setState({ selected: dates })
-  }
-
   handleSelect = (selectedDate) => {
     const { selected } = this.state
-    selectedDate = moment.utc(selectedDate, 'YYYY-MM-DD').format()
-    const { dates } = this.props
-    const index = selected.indexOf(selectedDate)
-    if (selected.length > dates.length) {
+    const { onSelectDate } = this.props
+    const isSelected = !!selected.find(date => moment(date).isSame(moment(selectedDate)))
+    if (isSelected) {
       selected.pop()
     } else {
+      selected.shift()
       selected.push(selectedDate)
+      onSelectDate(selectedDate)
     }
     this.setState({ selected })
   }
 
+  chooseColor = (selectedDate) => {
+    const { dates } = this.props
+    const index = dates.indexOf(moment.utc(selectedDate, 'YYYY-MM-DD').toISOString())
+    if (index > -1) {
+      return '#6cf47d'
+    }
+    return '#559fff'
+  }
+
   render() {
-    const { selected } = this.state
     const { dates } = this.props
     return (
       <InfiniteCalendar
         Component={withMultipleDates(Calendar)}
         width="100%"
         height={400}
-        selected={selected}
-        minDate={lastWeek}
-        interpolateSelection={defaultMultipleDateInterpolation}
+        selected={dates}
+        minDate={today}
+        interpolateSelection={multipleDateInterpolation(dates)}
         theme={{
-          selectionColor: selectDate => (dates.findIndex(date => date === moment.utc(selectDate, 'YYYY-MM-DD').toISOString()) > -1 ? '#6cf47d' : '#559FFF'),
+          selectionColor: this.chooseColor,
         }}
         onSelect={(date) => this.handleSelect(date)}
       />

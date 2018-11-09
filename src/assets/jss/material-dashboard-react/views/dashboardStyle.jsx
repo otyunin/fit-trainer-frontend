@@ -72,6 +72,13 @@ const dashboardStyle = {
       lineHeight: '1',
     },
   },
+  legend: {
+    marginTop: 5,
+    marginBottom: 10,
+  },
+  legendIcon: {
+    marginRight: 5,
+  },
 }
 
 export default dashboardStyle
