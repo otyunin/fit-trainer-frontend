@@ -32,7 +32,7 @@ const workout = (state = initialState, { type, payload }) => {
     case NEW_WORKOUT_REJECTED:
       return {
         ...state,
-        error: payload,
+        error: payload.message,
         loading: false,
       }
 
@@ -53,7 +53,7 @@ const workout = (state = initialState, { type, payload }) => {
     case GET_WORKOUT_REJECTED:
       return {
         ...state,
-        error: payload,
+        error: payload.message,
         loading: false,
       }
 
@@ -75,7 +75,7 @@ const workout = (state = initialState, { type, payload }) => {
     case GET_WORKOUT_DATES_REJECTED:
       return {
         ...state,
-        error: payload,
+        error: payload.message,
         loading: false,
       }
 
@@ -97,7 +97,7 @@ const workout = (state = initialState, { type, payload }) => {
     case UPDATE_WORKOUT_REJECTED:
       return {
         ...state,
-        error: payload,
+        error: payload.message,
         loading: false,
       }
 

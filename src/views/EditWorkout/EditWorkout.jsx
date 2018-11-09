@@ -55,7 +55,7 @@ class EditWorkout extends React.Component {
 
   handleAddExercises = () => {
     const { workoutExercises } = this.state
-    const body = { exercise: {}, repeats: '', measurement: '', order: workoutExercises.length }
+    const body = { exercise: {}, repeats: 0, measurement: 0, order: workoutExercises.length }
     workoutExercises.push(body)
     this.setState({ workoutExercises })
   }

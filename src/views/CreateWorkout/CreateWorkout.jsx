@@ -54,7 +54,7 @@ class CreateWorkout extends React.Component {
 
   handleAddExercises = () => {
     const { workout } = this.state
-    const body = { exercise: {}, repeats: 0, measurement: '', order: workout.length }
+    const body = { exercise: {}, repeats: 0, measurement: 0, order: workout.length }
     workout.push(body)
     this.setState({ workout })
   }
@@ -153,9 +153,14 @@ class CreateWorkout extends React.Component {
   handleSubmit = () => {
     const { workout } = this.state
     const { dispatch, match } = this.props
-    const newWorkout = workout.map(workoutExercise => ({
-      ...workoutExercise, exercise: workoutExercise.exercise._id,
-    }))
+    let newWorkout
+    if (workout) {
+      newWorkout = workout.map(workoutExercise => ({
+        ...workoutExercise, exercise: workoutExercise.exercise._id,
+      }))
+    } else {
+      newWorkout = []
+    }
     dispatch(createWorkout(newWorkout, match.params.date))
     this.setState({ openSnackbar: true })
     setTimeout(() => this.setState({ openSnackbar: false }), 6000)
