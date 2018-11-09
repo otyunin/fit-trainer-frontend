@@ -19,8 +19,10 @@ import { push } from 'connected-react-router'
 import { Link } from 'react-router-dom'
 
 class Dashboard extends React.Component {
-  state = {
-    selected: null,
+  constructor(props) {
+    super(props)
+    this.handleSelectDate = this.handleSelectDate.bind(this)
+    this.state = { selected: null }
   }
 
   componentDidMount() {
@@ -29,7 +31,8 @@ class Dashboard extends React.Component {
   }
 
   handleSelectDate = date => {
-    this.setState({ selected: moment(date).format('YYYY-MM-DD') })
+    if (!date) this.setState({ selected: date })
+    else this.setState({ selected: moment(date).format('YYYY-MM-DD') })
   }
 
   handleAddWorkout = () => {
@@ -42,19 +45,22 @@ class Dashboard extends React.Component {
 
   render() {
     const { dates, classes } = this.props
+    const { selected } = this.state
     return (
       <div>
         <GridContainer style={{ maxWidth: 400 }}>
           <Grid container justify="space-between">
             <Button component={Link} to="/create-exercise" color="primary">Add new exercise</Button>
-            <Button color="primary" onClick={this.handleAddWorkout}>Add new workout</Button>
+            <Button color="primary" onClick={this.handleAddWorkout} disabled={Boolean(selected) === false}>
+              Add new workout
+            </Button>
           </Grid>
           <Card className={classes.legend}>
             <CardBody>
               <GridContainer>
                 <Grid container alignItems="center">
                   <FiberManualRecord style={{ color: '#6cf47d' }} className={classes.legendIcon} />
-                  click to edit the created workout
+                  <span>click to edit the created workout</span>
                 </Grid>
                 <Grid container alignItems="center">
                   <FiberManualRecord style={{ color: '#559fff' }} className={classes.legendIcon} />
@@ -63,7 +69,7 @@ class Dashboard extends React.Component {
               </GridContainer>
             </CardBody>
           </Card>
-          <Calendar dates={dates} onSelectDate={this.handleSelectDate.bind(this)} />
+          <Calendar dates={dates} onSelectDate={this.handleSelectDate} />
         </GridContainer>
       </div>
     )

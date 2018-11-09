@@ -18,6 +18,7 @@ class CustomCalendar extends React.Component {
     const isSelected = !!selected.find(date => moment(date).isSame(moment(selectedDate)))
     if (isSelected) {
       selected.pop()
+      onSelectDate(null)
     } else {
       selected.shift()
       selected.push(selectedDate)
@@ -56,6 +57,7 @@ class CustomCalendar extends React.Component {
 
 CustomCalendar.propTypes = {
   dates: PropTypes.array.isRequired,
+  onSelectDate: PropTypes.func.isRequired,
 }
 
 export default CustomCalendar
