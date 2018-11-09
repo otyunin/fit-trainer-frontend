@@ -68,7 +68,7 @@ const dashboardRoutes = user => [
     icon: Edit,
     component: EditWorkoutPage,
   }) || null,
-  { redirect: true, exact: true, path: '/', to: user ? '/dashboard' : '/signin', navbarName: 'Redirect' },
+  { redirect: true, path: '/', to: user ? '/dashboard' : '/signin', navbarName: 'Redirect' },
 ].filter(route => !!route)
 
 export default dashboardRoutes

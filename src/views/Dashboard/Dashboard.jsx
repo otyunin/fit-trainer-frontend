@@ -44,7 +44,7 @@ class Dashboard extends React.Component {
     const { dispatch } = this.props
     const { selected } = this.state
     if (selected) {
-      if (moment(selected, 'YYYY-MM-DD').format() >= moment()) {
+      if (moment(selected, 'YYYY-MM-DD').isSameOrAfter(moment())) {
         dispatch(push(`/create-workout/${selected}`))
       } else {
         this.setState({
