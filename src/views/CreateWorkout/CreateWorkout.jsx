@@ -30,6 +30,7 @@ import { connect } from 'react-redux'
 import { getExercises } from 'redux/actions/exercises.action'
 import moment from 'moment'
 import { createWorkout } from 'redux/actions/workout.action'
+import { push } from 'connected-react-router'
 
 class CreateWorkout extends React.Component {
   state = {
@@ -49,6 +50,13 @@ class CreateWorkout extends React.Component {
     const { exercises } = this.props
     if (nextProps.exercises && exercises !== nextProps.exercises) {
       this.setState({ exercises: nextProps.exercises })
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { success, dispatch } = this.props
+    if (success) {
+      dispatch(push('/dashboard'))
     }
   }
 
@@ -152,7 +160,7 @@ class CreateWorkout extends React.Component {
 
   handleSubmit = () => {
     const { workout } = this.state
-    const { dispatch, match } = this.props
+    const { dispatch, match, error } = this.props
     let newWorkout
     if (workout) {
       newWorkout = workout.map(workoutExercise => ({
@@ -307,16 +315,19 @@ CreateWorkout.propTypes = {
   exercises: PropTypes.array,
   dispatch: PropTypes.func.isRequired,
   error: PropTypes.string,
+  success: PropTypes.bool,
 }
 
 CreateWorkout.defaultProps = {
   exercises: [],
   error: '',
+  success: false,
 }
 
 const mapStateToProps = store => ({
   exercises: store.exercises.exercises,
   error: store.workout.error,
+  success: store.workout.successCreate,
 })
 
 export default connect(mapStateToProps)(withStyles(createWorkoutStyle)(CreateWorkout))

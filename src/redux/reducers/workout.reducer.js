@@ -18,6 +18,7 @@ const initialState = {
   workout: null,
   dates: [],
   error: null,
+  successCreate: false,
 }
 
 const workout = (state = initialState, { type, payload }) => {
@@ -33,6 +34,7 @@ const workout = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: payload.message,
+        successCreate: false,
         loading: false,
       }
 
@@ -40,6 +42,7 @@ const workout = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: null,
+        successCreate: true,
         loading: false,
       }
     }
