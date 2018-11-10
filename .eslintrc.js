@@ -11,6 +11,7 @@ module.exports = {
     'import/no-duplicates': 0,
     'import/no-named-as-default': 0,
     'import/no-named-as-default-member': 0,
+    'import/no-cycle': 0,
     'max-len': [2, 120],
     'padded-blocks': 0,
     'import/first': 0,
