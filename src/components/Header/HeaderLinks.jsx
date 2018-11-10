@@ -123,7 +123,7 @@ class HeaderLinks extends React.Component {
                             onClick={this.handleLogout}
                             className={classes.dropdownItem}
                           >
-                            Logout
+                            Sign out
                           </MenuItem>
                         </MenuList>
                       )}

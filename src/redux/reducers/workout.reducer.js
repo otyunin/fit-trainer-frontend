@@ -14,7 +14,7 @@ import {
   DELETE_WORKOUT_PENDING,
   DELETE_WORKOUT_REJECTED,
   DELETE_WORKOUT_FULFILLED,
-} from '../actions/workout.action'
+} from '../actions'
 
 const initialState = {
   loading: false,

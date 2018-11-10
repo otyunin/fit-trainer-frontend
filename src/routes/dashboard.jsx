@@ -1,5 +1,13 @@
 // @material-ui/icons
-import { Dashboard, Edit, FitnessCenter, ListAlt, Person } from '@material-ui/icons'
+import { Person } from '@material-ui/icons'
+// Custom icons
+import {
+  CalendarIcon,
+  WorkoutIcon,
+  WorkoutEditIcon,
+  ExerciseIcon,
+  ExerciseEditIcon,
+} from 'components/icons'
 // core components/views
 import DashboardPage from 'views/Dashboard/Dashboard'
 import SignInPage from 'views/SignIn/SignIn'
@@ -37,35 +45,35 @@ const dashboardRoutes = user => [
     path: '/dashboard',
     sidebarName: 'Dashboard',
     navbarName: 'Material Dashboard',
-    icon: Dashboard,
+    icon: CalendarIcon,
     component: DashboardPage,
   }) || null,
   (user && {
     path: '/create-exercise',
     sidebarName: 'New Excercise',
     navbarName: 'New Excercise',
-    icon: FitnessCenter,
+    icon: ExerciseIcon,
     component: CreateExercisePage,
   }) || null,
   (user && {
     path: '/edit-exercises',
     sidebarName: 'Edit Excercises',
     navbarName: 'Edit Excercises',
-    icon: Edit,
+    icon: ExerciseEditIcon,
     component: EditExercisesPage,
   }) || null,
   (user && {
     path: '/create-workout/:date',
     sidebarName: 'New Workout',
     navbarName: 'New Workout',
-    icon: ListAlt,
+    icon: WorkoutIcon,
     component: CreateWorkoutPage,
   }) || null,
   (user && {
     path: '/edit-workout/:date',
     sidebarName: 'Edit Workout',
     navbarName: 'Edit Workout',
-    icon: Edit,
+    icon: WorkoutEditIcon,
     component: EditWorkoutPage,
   }) || null,
   { redirect: true, path: '/', to: user ? '/dashboard' : '/signin', navbarName: 'Redirect' },

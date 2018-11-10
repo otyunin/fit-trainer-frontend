@@ -313,8 +313,10 @@ class EditWorkout extends React.Component {
                 </Grid>
               </CardBody>
               <CardFooter>
-                <Button color="primary" onClick={this.handleSubmit}>Update workout</Button>
-                <Button color="danger" onClick={this.handleClickRemoveWorkout}>Delete workout</Button>
+                <Grid container justify="space-between">
+                  <Button color="primary" onClick={this.handleSubmit}>Update workout</Button>
+                  <Button color="danger" onClick={this.handleClickRemoveWorkout}>Delete workout</Button>
+                </Grid>
               </CardFooter>
             </Card>
           </GridItem>
