@@ -63,8 +63,7 @@ class EditWorkout extends React.Component {
   handleChangeSelect = (event, target) => {
     const { exercises } = this.props
     const { workoutExercises } = this.state
-    const foundExercise = exercises.filter(exercise => exercise._id === event.target.value)
-    workoutExercises[target].exercise = foundExercise[0]
+    workoutExercises[target].exercise = exercises.find(exercise => exercise._id === event.target.value)
     this.setState({ workoutExercises })
   }
 

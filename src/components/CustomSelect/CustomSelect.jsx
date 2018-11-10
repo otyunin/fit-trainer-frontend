@@ -7,6 +7,7 @@ import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select/Select'
 import MenuItem from '@material-ui/core/MenuItem/MenuItem'
+import FormHelperText from '@material-ui/core/FormHelperText/FormHelperText'
 // @material-ui/icons
 import Clear from '@material-ui/icons/Clear'
 import Check from '@material-ui/icons/Check'
@@ -36,6 +37,7 @@ class CustomSelect extends React.Component {
       value,
       showKey,
       returnKey,
+      helperText,
     } = this.props
 
     const { selectedOption } = this.state
@@ -96,6 +98,7 @@ class CustomSelect extends React.Component {
             </MenuItem>
           )}
         </Select>
+        <FormHelperText>{helperText}</FormHelperText>
         {error ? (
           <Clear className={`${classes.feedback} ${classes.labelRootError}`} />
         ) : success ? (
@@ -119,6 +122,7 @@ CustomSelect.propTypes = {
   value: PropTypes.string,
   showKey: PropTypes.string,
   returnKey: PropTypes.string,
+  helperText: PropTypes.string,
 }
 
 CustomSelect.defaultProps = {
@@ -133,6 +137,7 @@ CustomSelect.defaultProps = {
   value: undefined,
   showKey: '',
   returnKey: '',
+  helperText: '',
 }
 
 export default withStyles(customSelectStyle)(CustomSelect)
