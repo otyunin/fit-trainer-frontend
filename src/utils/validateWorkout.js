@@ -14,7 +14,7 @@ const validateWorkout = (workouts) => {
   if (error) {
     result = error.details.map(errorDetail => ({
       path: errorDetail.path,
-      message: errorDetail.message.replace(/"/g, '').replace('Field', ''),
+      message: errorDetail.message.replace(/("Field")/g, ''),
     }))
   }
   return result

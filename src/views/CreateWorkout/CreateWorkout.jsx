@@ -31,7 +31,7 @@ import { getExercises } from 'redux/actions/exercises.action'
 import moment from 'moment'
 import { createWorkout } from 'redux/actions/workout.action'
 import { push } from 'connected-react-router'
-import validateWorkout from './validateWorkout'
+import validateWorkout from 'utils/validateWorkout'
 
 class CreateWorkout extends React.Component {
   state = {
