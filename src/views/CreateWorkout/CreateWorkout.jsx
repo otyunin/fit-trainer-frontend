@@ -31,6 +31,7 @@ import { getExercises } from 'redux/actions/exercises.action'
 import moment from 'moment'
 import { createWorkout } from 'redux/actions/workout.action'
 import { push } from 'connected-react-router'
+import validateWorkout from './validateWorkout'
 
 class CreateWorkout extends React.Component {
   state = {
@@ -38,6 +39,7 @@ class CreateWorkout extends React.Component {
     workout: [],
     openDialog: false,
     openSnackbar: false,
+    snackbarMessage: '',
     indexToRemove: null,
   }
 
@@ -71,8 +73,7 @@ class CreateWorkout extends React.Component {
 
   handleChangeSelect = (event, target) => {
     const { workout, exercises } = this.state
-    const foundExercise = exercises.filter(exercise => exercise._id === event.target.value)
-    workout[target].exercise = foundExercise[0]
+    workout[target].exercise = exercises.find(exercise => exercise._id === event.target.value)
     this.setState({ workout })
   }
 
@@ -141,7 +142,7 @@ class CreateWorkout extends React.Component {
   }
 
   handleCloseSnackbar = () => {
-    this.setState({ openSnackbar: false })
+    this.setState({ openSnackbar: false, snackbarMessage: '' })
   }
 
   handleClickRemove = target => {
@@ -160,9 +161,10 @@ class CreateWorkout extends React.Component {
     this.setState({ workout: newWorkout, openDialog: false })
   }
 
-  handleSubmit = () => {
+  handleSubmit = async () => {
     const { workout } = this.state
-    const { dispatch, match, error } = this.props
+    const { dispatch, match } = this.props
+    // replace exercise objects with their id-s
     let newWorkout
     if (workout) {
       newWorkout = workout.map(workoutExercise => ({
@@ -171,14 +173,32 @@ class CreateWorkout extends React.Component {
     } else {
       newWorkout = []
     }
-    dispatch(createWorkout(newWorkout, match.params.date))
-    this.setState({ openSnackbar: true })
+    // VALIDATION
+    const errors = await validateWorkout(newWorkout)
+    // Add property 'errors' to the workout
+    const workoutWithErrors = workout.map((workoutExercise, index) => {
+      const errorsValidation = {}
+      errors.forEach(err => {
+        if (err.path[0] === index) {
+          errorsValidation[err.path[1]] = err.message
+        }
+      })
+      workoutExercise.errors = errorsValidation
+      return workoutExercise
+    })
+    this.setState({ workout: workoutWithErrors })
+    // Dispatch action if workout is valid
+    if (errors.length === 0) dispatch(createWorkout(newWorkout, match.params.date))
+    this.setState({
+      openSnackbar: true,
+      snackbarMessage: errors.length > 0 ? 'Validation error' : '',
+    })
     setTimeout(() => this.setState({ openSnackbar: false }), 6000)
   }
 
   render() {
     const { classes, exercises, error, match } = this.props
-    const { workout, openDialog, openSnackbar } = this.state
+    const { workout, openDialog, openSnackbar, snackbarMessage } = this.state
     return (
       <div>
         <GridContainer>
@@ -213,6 +233,7 @@ class CreateWorkout extends React.Component {
                           value={workoutExercises.exercise._id}
                           showKey="name"
                           returnKey="_id"
+                          helperText={workoutExercises.errors ? workoutExercises.errors.exercise : ''}
                           inputProps={{
                             name: 'exercise',
                             onChange: (event) => this.handleChangeSelect(event, index),
@@ -221,14 +242,17 @@ class CreateWorkout extends React.Component {
                           labelProps={{ shrink: true }}
                           formControlProps={{
                             fullWidth: true,
+                            error: workoutExercises.errors && !!workoutExercises.errors.exercise,
                           }}
                         />,
                         <CustomInput
                           labelText="Repeats"
                           id="repeats"
                           key={index}
+                          helperText={workoutExercises.errors ? workoutExercises.errors.repeats : ''}
                           formControlProps={{
                             fullWidth: true,
+                            error: workoutExercises.errors && !!workoutExercises.errors.repeats,
                           }}
                           inputProps={{
                             name: 'repeats',
@@ -241,9 +265,11 @@ class CreateWorkout extends React.Component {
                           labelText="Measurement"
                           id="measurement"
                           key={index}
+                          helperText={workoutExercises.errors ? workoutExercises.errors.measurement : ''}
                           formControlProps={{
                             fullWidth: true,
                             value: workoutExercises.measurement,
+                            error: workoutExercises.errors && !!workoutExercises.errors.measurement,
                           }}
                           inputProps={{
                             name: 'measurement',
@@ -298,9 +324,9 @@ class CreateWorkout extends React.Component {
           </Dialog>
           <Snackbar
             place="tc"
-            color={error ? 'danger' : 'success'}
-            icon={error ? ErrorOutline : CheckCircleOutline}
-            message={error || 'Workout successfully created!'}
+            color={error || snackbarMessage ? 'danger' : 'success'}
+            icon={error || snackbarMessage ? ErrorOutline : CheckCircleOutline}
+            message={snackbarMessage || error || 'Workout successfully created!'}
             open={openSnackbar}
             closeNotification={this.handleCloseSnackbar}
             close
