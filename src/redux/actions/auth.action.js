@@ -1,21 +1,5 @@
 import * as API from '../../api/auth'
-
-const SIGN_IN = 'SIGN_IN'
-export const SIGN_IN_PENDING = 'SIGN_IN_PENDING'
-export const SIGN_IN_REJECTED = 'SIGN_IN_REJECTED'
-export const SIGN_IN_FULFILLED = 'SIGN_IN_FULFILLED'
-
-const SIGN_UP = 'SIGN_UP'
-export const SIGN_UP_PENDING = 'SIGN_UP_PENDING'
-export const SIGN_UP_REJECTED = 'SIGN_UP_REJECTED'
-export const SIGN_UP_FULFILLED = 'SIGN_UP_FULFILLED'
-
-const VERIFY_EMAIL = 'VERIFY_EMAIL'
-export const VERIFY_EMAIL_PENDING = 'VERIFY_EMAIL_PENDING'
-export const VERIFY_EMAIL_REJECTED = 'VERIFY_EMAIL_REJECTED'
-export const VERIFY_EMAIL_FULFILLED = 'VERIFY_EMAIL_FULFILLED'
-
-export const LOGOUT = 'LOGOUT'
+import { LOGOUT, SIGN_IN, SIGN_UP, VERIFY_EMAIL } from './index'
 
 export const signIn = user => async dispatch => {
   await dispatch({

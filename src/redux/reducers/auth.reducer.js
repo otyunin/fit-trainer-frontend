@@ -11,7 +11,7 @@ import {
   VERIFY_EMAIL_FULFILLED,
   VERIFY_EMAIL_PENDING,
   VERIFY_EMAIL_REJECTED,
-} from '../actions/auth.action'
+} from '../actions'
 
 const initialState = {
   loading: false,
