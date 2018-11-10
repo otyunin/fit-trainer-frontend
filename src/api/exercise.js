@@ -1,9 +1,7 @@
-import { error, post, get, put } from './index'
+import { error, get, post, put } from './index'
 
 const config = () => ({
-  headers: {
-    Authorization: localStorage.getItem('JWT_TOKEN'),
-  },
+  headers: { Authorization: localStorage.getItem('JWT_TOKEN') },
 })
 
 export const createExercise = async data => {

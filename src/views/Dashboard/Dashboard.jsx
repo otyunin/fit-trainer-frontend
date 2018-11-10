@@ -20,7 +20,7 @@ const Dashboard = () => (
         width="100%"
         height={400}
         selected={today}
-        disabledDays={[0, 6]}
+        disabledDays={[]}
         minDate={lastWeek}
       />
     </GridContainer>
