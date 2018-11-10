@@ -7,6 +7,7 @@ import ListItem from '@material-ui/core/ListItem'
 import List from '@material-ui/core/List'
 // core components
 import footerStyle from 'assets/jss/material-dashboard-react/components/footerStyle.jsx'
+import moment from 'moment'
 
 const Footer = ({ classes, routes }) => (
   <footer className={classes.footer}>
@@ -15,9 +16,13 @@ const Footer = ({ classes, routes }) => (
         <List className={classes.list}>
           {routes.map((route, key) => {
             if (route.invisible) return null
+            let workoutPath = null
+
+            if (route.path.match('/create-workout')) workoutPath = `/create-workout/${moment().format('MM-DD-YYYY')}`
+            if (route.path.match('/edit-workout')) workoutPath = `/edit-workout/${moment().format('MM-DD-YYYY')}`
             return (
               <ListItem key={key} className={classes.inlineBlock}>
-                <Link to={route.path}>
+                <Link to={workoutPath || route.path}>
                   {route.sidebarName}
                 </Link>
               </ListItem>

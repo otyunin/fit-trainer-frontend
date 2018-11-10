@@ -24,6 +24,9 @@ const createExerciseStyle = {
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
+  dateIcon: {
+    marginRight: 5,
+  },
 }
 
 export default createExerciseStyle
