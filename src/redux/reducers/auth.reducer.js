@@ -31,7 +31,7 @@ const auth = (state = initialState, { type, payload }) => {
     case SIGN_IN_REJECTED:
       return {
         ...state,
-        error: payload,
+        error: payload.message,
         loading: false,
       }
 
@@ -54,7 +54,7 @@ const auth = (state = initialState, { type, payload }) => {
     case SIGN_UP_REJECTED:
       return {
         ...state,
-        error: payload,
+        error: payload.message,
         loading: false,
       }
 
