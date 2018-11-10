@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-underscore-dangle,react/jsx-one-expression-per-line */
 import React from 'react'
 import PropTypes from 'prop-types'
 // @material-ui/core
@@ -27,8 +27,9 @@ import Snackbar from 'components/Snackbar/Snackbar'
 
 import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/createWorkoutStyle'
 import { connect } from 'react-redux'
+import { push } from 'connected-react-router'
 import { getExercises } from 'redux/actions/exercises.action'
-import { getWorkout, updateWorkout } from 'redux/actions/workout.action'
+import { deleteWorkout, getWorkout, updateWorkout } from 'redux/actions/workout.action'
 import moment from 'moment'
 import validateWorkout from 'utils/validateWorkout'
 
@@ -40,6 +41,7 @@ class EditWorkout extends React.Component {
     openSnackbar: false,
     snackbarMessage: '',
     indexToRemove: null,
+    removeWorkout: false,
   }
 
   componentDidMount() {
@@ -52,6 +54,15 @@ class EditWorkout extends React.Component {
     const { workout } = this.props
     if (nextProps.workout && workout !== nextProps.workout) {
       this.setState({ workout: nextProps.workout, workoutExercises: nextProps.workout.exercises })
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { success, dispatch } = this.props
+    if (prevProps.success !== success) {
+      if (success) {
+        dispatch(push('/dashboard'))
+      }
     }
   }
 
@@ -130,7 +141,7 @@ class EditWorkout extends React.Component {
   }
 
   handleCloseDialog = () => {
-    this.setState({ openDialog: false, indexToRemove: null })
+    this.setState({ openDialog: false, indexToRemove: null, removeWorkout: false })
   }
 
   handleCloseSnackbar = () => {
@@ -141,16 +152,26 @@ class EditWorkout extends React.Component {
     this.setState({ openDialog: true, indexToRemove: target })
   }
 
+  handleClickRemoveWorkout = () => {
+    this.setState({ openDialog: true, removeWorkout: true })
+  }
+
   handleApplyDeletion = () => {
-    const { workoutExercises, indexToRemove } = this.state
-    const newWorkout = workoutExercises.map((workoutExercise, index) => {
-      if (index > indexToRemove) {
-        workoutExercise.order -= 1
-      }
-      return workoutExercise
-    })
-    newWorkout.splice(indexToRemove, 1)
-    this.setState({ workoutExercises: newWorkout, openDialog: false })
+    const { workoutExercises, indexToRemove, removeWorkout } = this.state
+    const { match, dispatch } = this.props
+    if (!removeWorkout) {
+      const newWorkout = workoutExercises.map((workoutExercise, index) => {
+        if (index > indexToRemove) {
+          workoutExercise.order -= 1
+        }
+        return workoutExercise
+      })
+      newWorkout.splice(indexToRemove, 1)
+      this.setState({ workoutExercises: newWorkout, openDialog: false })
+    } else {
+      dispatch(deleteWorkout(match.params.date))
+      this.setState({ openDialog: false })
+    }
   }
 
   handleSubmit = async () => {
@@ -186,7 +207,13 @@ class EditWorkout extends React.Component {
 
   render() {
     const { classes, exercises, error, match } = this.props
-    const { workoutExercises, openDialog, openSnackbar, snackbarMessage } = this.state
+    const {
+      workoutExercises,
+      openDialog,
+      openSnackbar,
+      snackbarMessage,
+      removeWorkout,
+    } = this.state
 
     return (
       <div>
@@ -287,6 +314,7 @@ class EditWorkout extends React.Component {
               </CardBody>
               <CardFooter>
                 <Button color="primary" onClick={this.handleSubmit}>Update workout</Button>
+                <Button color="danger" onClick={this.handleClickRemoveWorkout}>Delete workout</Button>
               </CardFooter>
             </Card>
           </GridItem>
@@ -299,7 +327,7 @@ class EditWorkout extends React.Component {
             <DialogTitle id="dialog-title">Confirm the deletion</DialogTitle>
             <DialogContent>
               <DialogContentText id="dialog-description">
-                Do you really want to delete the exercise?
+                Do you really want to delete the {removeWorkout ? 'workout' : 'exercise'}?
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -333,18 +361,21 @@ EditWorkout.propTypes = {
   workout: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
   error: PropTypes.string,
+  success: PropTypes.bool,
 }
 
 EditWorkout.defaultProps = {
   exercises: [],
   workout: {},
   error: '',
+  success: false,
 }
 
 const mapStateToProps = store => ({
   workout: store.workout.workout,
   exercises: store.exercises.exercises,
   error: store.workout.error,
+  success: store.workout.successDelete,
 })
 
 export default connect(mapStateToProps)(withStyles(createWorkoutStyle)(EditWorkout))

@@ -11,6 +11,9 @@ import {
   GET_WORKOUT_DATES_PENDING,
   GET_WORKOUT_DATES_REJECTED,
   GET_WORKOUT_DATES_FULFILLED,
+  DELETE_WORKOUT_PENDING,
+  DELETE_WORKOUT_REJECTED,
+  DELETE_WORKOUT_FULFILLED,
 } from '../actions/workout.action'
 
 const initialState = {
@@ -19,6 +22,7 @@ const initialState = {
   dates: [],
   error: null,
   successCreate: false,
+  successDelete: false,
 }
 
 const workout = (state = initialState, { type, payload }) => {
@@ -27,6 +31,7 @@ const workout = (state = initialState, { type, payload }) => {
     case NEW_WORKOUT_PENDING:
       return {
         ...state,
+        successCreate: false,
         loading: true,
       }
 
@@ -108,6 +113,30 @@ const workout = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: null,
+        loading: false,
+      }
+    }
+    // DELETE
+    case DELETE_WORKOUT_PENDING:
+      return {
+        ...state,
+        successDelete: false,
+        loading: true,
+      }
+
+    case DELETE_WORKOUT_REJECTED:
+      return {
+        ...state,
+        error: payload.message,
+        successDelete: false,
+        loading: false,
+      }
+
+    case DELETE_WORKOUT_FULFILLED: {
+      return {
+        ...state,
+        error: null,
+        successDelete: true,
         loading: false,
       }
     }

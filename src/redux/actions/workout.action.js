@@ -20,6 +20,11 @@ export const GET_WORKOUT_DATES_PENDING = 'GET_WORKOUT_DATES_PENDING'
 export const GET_WORKOUT_DATES_REJECTED = 'GET_WORKOUT_DATES_REJECTED'
 export const GET_WORKOUT_DATES_FULFILLED = 'GET_WORKOUT_DATES_FULFILLED'
 
+const DELETE_WORKOUT = 'DELETE_WORKOUT'
+export const DELETE_WORKOUT_PENDING = 'DELETE_WORKOUT_PENDING'
+export const DELETE_WORKOUT_REJECTED = 'DELETE_WORKOUT_REJECTED'
+export const DELETE_WORKOUT_FULFILLED = 'DELETE_WORKOUT_FULFILLED'
+
 export const getWorkoutDates = () => async dispatch => {
   await dispatch({
     type: GET_WORKOUT_DATES,
@@ -45,5 +50,12 @@ export const updateWorkout = (data, date) => async dispatch => {
   await dispatch({
     type: UPDATE_WORKOUT,
     payload: API.updateWorkout(data, date),
+  })
+}
+
+export const deleteWorkout = date => async dispatch => {
+  await dispatch({
+    type: DELETE_WORKOUT,
+    payload: API.deleteWorkout(date),
   })
 }

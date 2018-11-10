@@ -1,4 +1,4 @@
-import { error, post, get, put } from './index'
+import { error, post, get, put, del } from './index'
 
 const config = () => ({
   headers: { Authorization: localStorage.getItem('JWT_TOKEN') },
@@ -43,4 +43,11 @@ export const updateWorkout = async (data, date) => {
   return {
     workout: res.data.workout,
   }
+}
+
+export const deleteWorkout = async (date) => {
+  const [err, res] = await del(`/workout/${date}`, config)
+
+  if (err) throw error(err)
+  if (!res.data.success) throw res.data.message
 }
