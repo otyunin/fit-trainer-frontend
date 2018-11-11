@@ -14,6 +14,16 @@ import Check from '@material-ui/icons/Check'
 // core components
 import customSelectStyle from 'assets/jss/material-dashboard-react/components/customSelectStyle.jsx'
 
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 3.4 + ITEM_PADDING_TOP,
+    },
+  },
+}
+
 class CustomSelect extends React.Component {
   state = {
     selectedOption: '',
@@ -78,6 +88,7 @@ class CustomSelect extends React.Component {
           className={underlineClasses}
           id={id}
           {...inputProps}
+          MenuProps={MenuProps}
         >
           {selectData.length > 0 ? (
             selectData.map((option, key) => [
@@ -93,6 +104,7 @@ class CustomSelect extends React.Component {
             <MenuItem
               className={classes.dropdownItem}
               value={selectedOption}
+              disabled
             >
               None
             </MenuItem>

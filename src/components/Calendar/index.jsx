@@ -31,7 +31,7 @@ class CustomCalendar extends React.Component {
     if (index > -1) {
       return '#6cf47d'
     }
-    return '#559fff'
+    return '#00dbfc'
   }
 
   render() {

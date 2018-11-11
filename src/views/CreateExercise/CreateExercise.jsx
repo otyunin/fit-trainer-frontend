@@ -15,6 +15,7 @@ import CustomSelect from 'components/CustomSelect/CustomSelect'
 import Snackbar from 'components/Snackbar/Snackbar'
 
 import createExerciseStyle from 'assets/jss/material-dashboard-react/views/createExerciseStyle'
+import { measurements } from 'utils/measurements'
 import formik from './formik'
 
 class CreateExercise extends React.Component {
@@ -27,7 +28,7 @@ class CreateExercise extends React.Component {
   }
 
   componentWillUnmount() {
-    this.setState({ isMounted: true })
+    this.setState({ isMounted: false })
   }
 
   handleSubmit = event => {
@@ -72,7 +73,7 @@ class CreateExercise extends React.Component {
                         labelText="Exercise Name"
                         id="exercise-name"
                         error={errorName}
-                        helperText={errors.name || ''}
+                        helperText={(touched.name && errors.name) || ''}
                         formControlProps={{
                           fullWidth: true,
                           onChange: handleChange,
@@ -91,10 +92,10 @@ class CreateExercise extends React.Component {
                       <CustomSelect
                         labelText="Measurement type"
                         id="measurement-type"
-                        selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilometers']}
+                        selectData={measurements.map(measurement => measurement.type)}
                         labelProps={{ shrink: true }}
                         value={values.measurement}
-                        helperText={errors.measurement || ''}
+                        helperText={(touched.measurement && errors.measurement) || ''}
                         formControlProps={{
                           fullWidth: true,
                           error: errorMeasurement,

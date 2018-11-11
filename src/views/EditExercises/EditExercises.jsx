@@ -24,19 +24,28 @@ import CustomInput from 'components/CustomInput/CustomInput'
 import Snackbar from 'components/Snackbar/Snackbar'
 
 import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/createWorkoutStyle'
+import { measurements } from 'utils/measurements'
 import { connect } from 'react-redux'
 import { getExercises, updateExercises } from 'redux/actions/exercises.action'
+import { handleClickDown, handleClickUp } from 'utils/movement'
 
 class EditExercises extends React.Component {
-  state = {
-    exercises: [],
-    openDialog: false,
-    openSnackbar: false,
-    indexToRemove: null,
+  constructor(props) {
+    super(props)
+    this.handleClickUp = handleClickUp.bind(this)
+    this.handleClickDown = handleClickDown.bind(this)
+    this.state = {
+      exercises: [],
+      openDialog: false,
+      openSnackbar: false,
+      indexToRemove: null,
+      isMounted: false,
+    }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { dispatch } = this.props
+    this.setState({ isMounted: true })
     dispatch(getExercises())
   }
 
@@ -47,70 +56,18 @@ class EditExercises extends React.Component {
     }
   }
 
-  handleCloseDialog = () => {
-    this.setState({ openDialog: false, indexToRemove: null })
+  componentWillUnmount() {
+    this.setState({ isMounted: false })
   }
 
-  handleCloseSnackbar = () => {
-    this.setState({ openSnackbar: false })
+  handleChange = (event, target) => {
+    const { exercises } = this.state
+    exercises[target][event.target.name] = event.target.value
+    this.setState(exercises)
   }
 
   handleClickRemove = target => {
     this.setState({ openDialog: true, indexToRemove: target })
-  }
-
-  handleClickUp = target => {
-    const { exercises } = this.state
-    if (target !== 0) {
-      const newExercises = exercises.map((exercise, index) => {
-        if (index === target - 1) {
-          exercise.order += 1
-        }
-        if (index === target) {
-          exercise.order -= 1
-        }
-        return exercise
-      })
-      this.setState({ exercises: newExercises })
-    } else {
-      const newExercises = exercises.map((exercise, index) => {
-        if (index > target) {
-          exercise.order -= 1
-        }
-        if (index === target) {
-          exercise.order = exercises.length - 1
-        }
-        return exercise
-      })
-      this.setState({ exercises: newExercises })
-    }
-  }
-
-  handleClickDown = target => {
-    const { exercises } = this.state
-    if (target !== exercises.length - 1) {
-      const newExercises = exercises.map((exercise, index) => {
-        if (index === target + 1) {
-          exercise.order -= 1
-        }
-        if (index === target) {
-          exercise.order += 1
-        }
-        return exercise
-      })
-      this.setState({ exercises: newExercises })
-    } else {
-      const newExercises = exercises.map((exercise, index) => {
-        if (index < target) {
-          exercise.order += 1
-        }
-        if (index === target) {
-          exercise.order = 0
-        }
-        return exercise
-      })
-      this.setState({ exercises: newExercises })
-    }
   }
 
   handleApplyDeletion = () => {
@@ -125,18 +82,22 @@ class EditExercises extends React.Component {
     this.setState({ exercises: newExercises, openDialog: false })
   }
 
-  handleSubmit = () => {
-    const { exercises } = this.state
-    const { dispatch } = this.props
-    dispatch(updateExercises(exercises))
-    this.setState({ openSnackbar: true })
-    setTimeout(() => this.setState({ openSnackbar: false }), 6000)
+  handleCloseDialog = () => {
+    this.setState({ openDialog: false, indexToRemove: null })
   }
 
-  handleChange = (event, target) => {
-    const { exercises } = this.state
-    exercises[target][event.target.name] = event.target.value
-    this.setState(exercises)
+  handleCloseSnackbar = () => {
+    this.setState({ openSnackbar: false })
+  }
+
+  handleSubmit = () => {
+    const { exercises, isMounted } = this.state
+    const { dispatch } = this.props
+    if (isMounted) {
+      dispatch(updateExercises(exercises))
+      this.setState({ openSnackbar: true })
+      setTimeout(() => this.setState({ openSnackbar: false }), 6000)
+    }
   }
 
   render() {
@@ -171,7 +132,7 @@ class EditExercises extends React.Component {
                         labelText="Measurement type"
                         id="measurement-type"
                         value={exercise.measurement}
-                        selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilometers']}
+                        selectData={measurements.map(measurement => measurement.type)}
                         inputProps={{
                           name: 'measurement',
                           onChange: (event) => this.handleChange(event, index),

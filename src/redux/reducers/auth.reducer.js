@@ -16,10 +16,7 @@ import {
 const initialState = {
   loading: false,
   user: null,
-  errorLogin: null,
-  errorRegister: null,
-  errorVerify: null,
-  verificationCode: '',
+  error: null,
 }
 
 const auth = (state = initialState, { type, payload }) => {
@@ -34,7 +31,7 @@ const auth = (state = initialState, { type, payload }) => {
     case SIGN_IN_REJECTED:
       return {
         ...state,
-        errorLogin: payload,
+        error: payload.message,
         loading: false,
       }
 
@@ -43,7 +40,7 @@ const auth = (state = initialState, { type, payload }) => {
       return {
         ...state,
         user: payload,
-        errorLogin: null,
+        error: null,
         loading: false,
       }
     }
@@ -57,15 +54,14 @@ const auth = (state = initialState, { type, payload }) => {
     case SIGN_UP_REJECTED:
       return {
         ...state,
-        errorRegister: payload,
+        error: payload.message,
         loading: false,
       }
 
     case SIGN_UP_FULFILLED: {
       return {
         ...state,
-        verificationCode: payload,
-        errorRegister: null,
+        error: null,
         loading: false,
       }
     }
@@ -79,7 +75,7 @@ const auth = (state = initialState, { type, payload }) => {
     case VERIFY_EMAIL_REJECTED:
       return {
         ...state,
-        errorVerify: payload,
+        error: payload,
         loading: false,
       }
 
@@ -88,7 +84,7 @@ const auth = (state = initialState, { type, payload }) => {
       return {
         ...state,
         user: payload,
-        errorVerify: null,
+        error: null,
         loading: false,
       }
     }

@@ -26,26 +26,36 @@ import CustomInput from 'components/CustomInput/CustomInput'
 import Snackbar from 'components/Snackbar/Snackbar'
 
 import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/createWorkoutStyle'
+import { getAbbreviation } from 'utils/measurements'
 import { connect } from 'react-redux'
 import { getExercises } from 'redux/actions/exercises.action'
 import moment from 'moment'
 import { createWorkout } from 'redux/actions/workout.action'
 import { push } from 'connected-react-router'
 import validateWorkout from 'utils/validateWorkout'
+import { handleClickDown, handleClickUp, addExercises } from 'utils/movement'
 
 class CreateWorkout extends React.Component {
-  state = {
-    exercises: [],
-    workout: [],
-    openDialog: false,
-    openSnackbar: false,
-    snackbarMessage: '',
-    indexToRemove: null,
+  constructor(props) {
+    super(props)
+    this.addExercises = addExercises.bind(this)
+    this.handleClickUp = handleClickUp.bind(this)
+    this.handleClickDown = handleClickDown.bind(this)
+    this.state = {
+      exercises: [],
+      workoutExercises: [],
+      openDialog: false,
+      openSnackbar: false,
+      snackbarMessage: '',
+      indexToRemove: null,
+      isMounted: false,
+    }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { dispatch, match } = this.props
     dispatch(getExercises(match.params.date))
+    this.setState({ isMounted: true })
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -64,77 +74,36 @@ class CreateWorkout extends React.Component {
     }
   }
 
-  handleAddExercises = () => {
-    const { workout } = this.state
-    const body = { exercise: {}, repeats: 0, measurement: 0, order: workout.length }
-    workout.push(body)
-    this.setState({ workout })
-  }
-
-  handleChangeSelect = (event, target) => {
-    const { workout, exercises } = this.state
-    workout[target].exercise = exercises.find(exercise => exercise._id === event.target.value)
-    this.setState({ workout })
+  componentWillUnmount() {
+    this.setState({ isMounted: false })
   }
 
   handleChange = (event, target) => {
-    const { workout } = this.state
-    workout[target][event.target.name] = event.target.value
-    this.setState({ workout })
+    const { workoutExercises } = this.state
+    workoutExercises[target][event.target.name] = event.target.value
+    this.setState({ workoutExercises })
   }
 
-  handleClickUp = target => {
-    const { workout } = this.state
-    if (target !== 0) {
-      const newWorkout = workout.map((workoutExercise, index) => {
-        if (index === target - 1) {
-          workoutExercise.order += 1
-        }
-        if (index === target) {
-          workoutExercise.order -= 1
-        }
-        return workoutExercise
-      })
-      this.setState({ workout: newWorkout })
-    } else {
-      const newWorkout = workout.map((workoutExercise, index) => {
-        if (index > target) {
-          workoutExercise.order -= 1
-        }
-        if (index === target) {
-          workoutExercise.order = workout.length - 1
-        }
-        return workoutExercise
-      })
-      this.setState({ workout: newWorkout })
-    }
+  handleChangeSelect = (event, target) => {
+    const { workoutExercises, exercises } = this.state
+    workoutExercises[target].exercise = exercises.find(exercise => exercise._id === event.target.value)
+    this.setState({ workoutExercises })
   }
 
-  handleClickDown = target => {
-    const { workout } = this.state
-    if (target !== workout.length - 1) {
-      const newWorkout = workout.map((workoutExercise, index) => {
-        if (index === target + 1) {
-          workoutExercise.order -= 1
-        }
-        if (index === target) {
-          workoutExercise.order += 1
-        }
-        return workoutExercise
-      })
-      this.setState({ workout: newWorkout })
-    } else {
-      const newWorkout = workout.map((workoutExercise, index) => {
-        if (index < target) {
-          workoutExercise.order += 1
-        }
-        if (index === target) {
-          workoutExercise.order = 0
-        }
-        return workoutExercise
-      })
-      this.setState({ workout: newWorkout })
-    }
+  handleClickRemove = target => {
+    this.setState({ openDialog: true, indexToRemove: target })
+  }
+
+  handleApplyDeletion = () => {
+    const { workoutExercises, indexToRemove } = this.state
+    const newWorkout = workoutExercises.map((workoutExercise, index) => {
+      if (index > indexToRemove) {
+        workoutExercise.order -= 1
+      }
+      return workoutExercise
+    })
+    newWorkout.splice(indexToRemove, 1)
+    this.setState({ workoutExercises: newWorkout, openDialog: false })
   }
 
   handleCloseDialog = () => {
@@ -145,60 +114,46 @@ class CreateWorkout extends React.Component {
     this.setState({ openSnackbar: false, snackbarMessage: '' })
   }
 
-  handleClickRemove = target => {
-    this.setState({ openDialog: true, indexToRemove: target })
-  }
-
-  handleApplyDeletion = () => {
-    const { workout, indexToRemove } = this.state
-    const newWorkout = workout.map((workoutExercise, index) => {
-      if (index > indexToRemove) {
-        workoutExercise.order -= 1
-      }
-      return workoutExercise
-    })
-    newWorkout.splice(indexToRemove, 1)
-    this.setState({ workout: newWorkout, openDialog: false })
-  }
-
   handleSubmit = async () => {
-    const { workout } = this.state
+    const { workoutExercises, isMounted } = this.state
     const { dispatch, match } = this.props
-    // replace exercise objects with their id-s
-    let newWorkout
-    if (workout) {
-      newWorkout = workout.map(workoutExercise => ({
-        ...workoutExercise, exercise: workoutExercise.exercise._id,
-      }))
-    } else {
-      newWorkout = []
-    }
-    // VALIDATION
-    const errors = await validateWorkout(newWorkout)
-    // Add property 'errors' to the workout
-    const workoutWithErrors = workout.map((workoutExercise, index) => {
-      const errorsValidation = {}
-      errors.forEach(err => {
-        if (err.path[0] === index) {
-          errorsValidation[err.path[1]] = err.message
-        }
+    if (isMounted) {
+      // replace exercise objects with their id-s
+      let newWorkout
+      if (workoutExercises) {
+        newWorkout = workoutExercises.map(workoutExercise => ({
+          ...workoutExercise, exercise: workoutExercise.exercise._id,
+        }))
+      } else {
+        newWorkout = []
+      }
+      // VALIDATION
+      const errors = await validateWorkout(newWorkout)
+      // Add property 'errors' to the workoutExercises
+      const workoutWithErrors = workoutExercises.map((workoutExercise, index) => {
+        const errorsValidation = {}
+        errors.forEach(err => {
+          if (err.path[0] === index) {
+            errorsValidation[err.path[1]] = err.message
+          }
+        })
+        workoutExercise.errors = errorsValidation
+        return workoutExercise
       })
-      workoutExercise.errors = errorsValidation
-      return workoutExercise
-    })
-    this.setState({ workout: workoutWithErrors })
-    // Dispatch action if workout is valid
-    if (errors.length === 0) dispatch(createWorkout(newWorkout, match.params.date))
-    this.setState({
-      openSnackbar: true,
-      snackbarMessage: errors.length > 0 ? 'Validation error' : '',
-    })
-    setTimeout(() => this.setState({ openSnackbar: false }), 6000)
+      this.setState({ workoutExercises: workoutWithErrors })
+      // Dispatch action if workoutExercises is valid
+      if (errors.length === 0) dispatch(createWorkout(newWorkout, match.params.date))
+      this.setState({
+        openSnackbar: true,
+        snackbarMessage: errors.length > 0 ? 'Validation error' : '',
+      })
+      setTimeout(() => this.setState({ openSnackbar: false }), 6000)
+    }
   }
 
   render() {
     const { classes, exercises, error, match } = this.props
-    const { workout, openDialog, openSnackbar, snackbarMessage } = this.state
+    const { workoutExercises, openDialog, openSnackbar, snackbarMessage } = this.state
     return (
       <div>
         <GridContainer>
@@ -219,45 +174,45 @@ class CreateWorkout extends React.Component {
               </CardHeader>
               <CardBody>
                 <Grid container>
-                  <Button color="primary" onClick={this.handleAddExercises}>Add exercise</Button>
+                  <Button color="primary" onClick={this.addExercises}>Add exercise</Button>
                 </Grid>
                 <Grid container alignItems="center">
                   <Table
-                    tableData={workout.sort((a, b) => a.order - b.order)
-                      .map((workoutExercises, index) => [
+                    tableData={workoutExercises.sort((a, b) => a.order - b.order)
+                      .map((workoutExercise, index) => [
                         <CustomSelect
                           labelText="Exercise name"
                           id="exercise"
                           key={index}
                           selectData={!exercises ? [] : exercises.map(exercise => exercise)}
-                          value={workoutExercises.exercise._id}
+                          value={workoutExercise.exercise._id}
                           showKey="name"
                           returnKey="_id"
-                          helperText={workoutExercises.errors ? workoutExercises.errors.exercise : ''}
+                          helperText={workoutExercise.errors ? workoutExercise.errors.exercise : ''}
                           inputProps={{
                             name: 'exercise',
                             onChange: (event) => this.handleChangeSelect(event, index),
-                            renderValue: () => workoutExercises.exercise.name,
+                            renderValue: () => workoutExercise.exercise.name,
                           }}
                           labelProps={{ shrink: true }}
                           formControlProps={{
                             fullWidth: true,
-                            error: workoutExercises.errors && !!workoutExercises.errors.exercise,
+                            error: workoutExercise.errors && !!workoutExercise.errors.exercise,
                           }}
                         />,
                         <CustomInput
                           labelText="Repeats"
                           id="repeats"
                           key={index}
-                          helperText={workoutExercises.errors ? workoutExercises.errors.repeats : ''}
+                          helperText={workoutExercise.errors ? workoutExercise.errors.repeats : ''}
                           formControlProps={{
                             fullWidth: true,
-                            error: workoutExercises.errors && !!workoutExercises.errors.repeats,
+                            error: workoutExercise.errors && !!workoutExercise.errors.repeats,
                           }}
                           inputProps={{
                             name: 'repeats',
                             type: 'number',
-                            value: workoutExercises.repeats,
+                            value: workoutExercise.repeats,
                             onChange: (event) => this.handleChange(event, index),
                           }}
                         />,
@@ -265,21 +220,21 @@ class CreateWorkout extends React.Component {
                           labelText="Measurement"
                           id="measurement"
                           key={index}
-                          helperText={workoutExercises.errors ? workoutExercises.errors.measurement : ''}
+                          helperText={workoutExercise.errors ? workoutExercise.errors.measurement : ''}
                           formControlProps={{
                             fullWidth: true,
-                            value: workoutExercises.measurement,
-                            error: workoutExercises.errors && !!workoutExercises.errors.measurement,
+                            value: workoutExercise.measurement,
+                            error: workoutExercise.errors && !!workoutExercise.errors.measurement,
                           }}
                           inputProps={{
                             name: 'measurement',
                             type: 'number',
-                            value: workoutExercises.measurement,
+                            value: workoutExercise.measurement,
                             onChange: (event) => this.handleChange(event, index),
                           }}
                         />,
                         <FormLabel>
-                          {workoutExercises.exercise.measurement}
+                          {getAbbreviation(workoutExercise.exercise.measurement)}
                         </FormLabel>,
                         <div>
                           <Button color="info" onClick={() => this.handleClickUp(index)}>

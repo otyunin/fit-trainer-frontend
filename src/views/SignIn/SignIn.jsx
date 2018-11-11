@@ -166,7 +166,7 @@ SignIn.defaultProps = {
 }
 
 const mapStateToProps = store => ({
-  error: store.auth.errorLogin,
+  error: store.auth.error,
 })
 
 export default connect(mapStateToProps)(formik(withStyles(styles)(SignIn)))

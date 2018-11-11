@@ -214,7 +214,7 @@ SignUp.defaultProps = {
 }
 
 const mapStateToProps = store => ({
-  error: store.auth.errorRegister,
+  error: store.auth.error,
 })
 
 export default connect(mapStateToProps)(formik(withStyles(styles)(SignUp)))
