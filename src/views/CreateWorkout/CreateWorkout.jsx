@@ -177,7 +177,9 @@ class CreateWorkout extends React.Component {
               </CardHeader>
               <CardBody>
                 <Grid container>
-                  <Button color="primary" onClick={this.addExercises}>Add exercise</Button>
+                  <Button color="primary" onClick={this.addExercises} disabled={isCreated}>
+                    Add exercise
+                  </Button>
                 </Grid>
                 {isCreated ? (
                   <Grid container justify="center" style={{ marginTop: 15 }}>
