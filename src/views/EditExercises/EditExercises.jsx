@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React from 'react'
 import PropTypes from 'prop-types'
 // @material-ui/core
@@ -40,6 +41,7 @@ class EditExercises extends React.Component {
       openSnackbar: false,
       indexToRemove: null,
       isMounted: false,
+      deleted: false,
     }
   }
 
@@ -79,7 +81,9 @@ class EditExercises extends React.Component {
       return exercise
     })
     newExercises.splice(indexToRemove, 1)
-    this.setState({ exercises: newExercises, openDialog: false })
+    this.setState({ exercises: newExercises, openDialog: false, openSnackbar: true, deleted: true })
+    setTimeout(() => this.setState({ openSnackbar: false }), 6000)
+    setTimeout(() => this.setState({ deleted: false }), 6500)
   }
 
   handleCloseDialog = () => {
@@ -102,7 +106,7 @@ class EditExercises extends React.Component {
 
   render() {
     const { classes, error } = this.props
-    const { openDialog, exercises, openSnackbar } = this.state
+    const { openDialog, exercises, openSnackbar, deleted } = this.state
     return (
       <div>
         <GridContainer>
@@ -186,9 +190,10 @@ class EditExercises extends React.Component {
         </Dialog>
         <Snackbar
           place="tc"
-          color={error ? 'danger' : 'success'}
+          color={error ? 'danger' : (deleted ? 'info' : 'success')}
           icon={error ? ErrorOutline : CheckCircleOutline}
-          message={error || 'Exercises successfully updated!'}
+          message={deleted ? 'Click \'Update exercises\' to apply the changes' : (
+            error || 'Exercises successfully updated!')}
           open={openSnackbar}
           closeNotification={this.handleCloseSnackbar}
           close

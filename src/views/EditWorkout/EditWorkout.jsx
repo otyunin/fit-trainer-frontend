@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle,react/jsx-one-expression-per-line */
+/* eslint-disable no-underscore-dangle,react/jsx-one-expression-per-line,no-nested-ternary */
 import React from 'react'
 import PropTypes from 'prop-types'
 // @material-ui/core
@@ -51,6 +51,7 @@ class EditWorkout extends React.Component {
       indexToRemove: null,
       removeWorkout: false,
       isMounted: false,
+      deleted: false,
     }
   }
 
@@ -121,7 +122,9 @@ class EditWorkout extends React.Component {
         return workoutExercise
       })
       newWorkout.splice(indexToRemove, 1)
-      this.setState({ workoutExercises: newWorkout, openDialog: false })
+      this.setState({ workoutExercises: newWorkout, openDialog: false, openSnackbar: true, deleted: true })
+      setTimeout(() => this.setState({ openSnackbar: false }), 6000)
+      setTimeout(() => this.setState({ deleted: false }), 6500)
     } else {
       dispatch(deleteWorkout(match.params.date))
       this.setState({ openDialog: false })
@@ -169,6 +172,7 @@ class EditWorkout extends React.Component {
       openSnackbar,
       snackbarMessage,
       removeWorkout,
+      deleted,
     } = this.state
 
     return (
@@ -301,9 +305,10 @@ class EditWorkout extends React.Component {
           </Dialog>
           <Snackbar
             place="tc"
-            color={error || snackbarMessage ? 'danger' : 'success'}
+            color={error || snackbarMessage ? 'danger' : (deleted ? 'info' : 'success')}
             icon={error || snackbarMessage ? ErrorOutline : CheckCircleOutline}
-            message={snackbarMessage || error || 'Workout successfully updated!'}
+            message={deleted ? 'Click \'Update workout\' to apply the changes' : (
+              snackbarMessage || error || 'Workout successfully updated!')}
             open={openSnackbar}
             closeNotification={this.handleCloseSnackbar}
             close
