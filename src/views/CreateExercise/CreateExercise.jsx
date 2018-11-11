@@ -72,7 +72,7 @@ class CreateExercise extends React.Component {
                         labelText="Exercise Name"
                         id="exercise-name"
                         error={errorName}
-                        helperText={errors.name || ''}
+                        helperText={(touched.name && errors.name) || ''}
                         formControlProps={{
                           fullWidth: true,
                           onChange: handleChange,
@@ -94,7 +94,7 @@ class CreateExercise extends React.Component {
                         selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilometers']}
                         labelProps={{ shrink: true }}
                         value={values.measurement}
-                        helperText={errors.measurement || ''}
+                        helperText={(touched.measurement && errors.measurement) || ''}
                         formControlProps={{
                           fullWidth: true,
                           error: errorMeasurement,

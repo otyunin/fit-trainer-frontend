@@ -93,6 +93,7 @@ class CustomSelect extends React.Component {
             <MenuItem
               className={classes.dropdownItem}
               value={selectedOption}
+              disabled
             >
               None
             </MenuItem>
