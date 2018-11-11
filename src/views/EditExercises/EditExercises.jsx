@@ -177,6 +177,7 @@ class EditExercises extends React.Component {
           <DialogContent>
             <DialogContentText id="dialog-description">
               Do you really want to delete the exercise?
+              <p style={{ color: '#f44336' }}>It will be removed in all workouts.</p>
             </DialogContentText>
           </DialogContent>
           <DialogActions>
