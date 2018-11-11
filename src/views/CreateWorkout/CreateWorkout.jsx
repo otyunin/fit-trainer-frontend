@@ -33,6 +33,7 @@ import moment from 'moment'
 import { createWorkout } from 'redux/actions/workout.action'
 import { push } from 'connected-react-router'
 import validateWorkout from 'utils/validateWorkout'
+import { handleClickDown, handleClickUp } from 'utils/movement'
 
 class CreateWorkout extends React.Component {
   state = {
@@ -42,11 +43,13 @@ class CreateWorkout extends React.Component {
     openSnackbar: false,
     snackbarMessage: '',
     indexToRemove: null,
+    isMounted: false,
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { dispatch, match } = this.props
     dispatch(getExercises(match.params.date))
+    this.setState({ isMounted: true })
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -65,10 +68,13 @@ class CreateWorkout extends React.Component {
     }
   }
 
-  handleAddExercises = () => {
+  componentWillUnmount() {
+    this.setState({ isMounted: true })
+  }
+
+  handleChange = (event, target) => {
     const { workout } = this.state
-    const body = { exercise: {}, repeats: 0, measurement: 0, order: workout.length }
-    workout.push(body)
+    workout[target][event.target.name] = event.target.value
     this.setState({ workout })
   }
 
@@ -78,72 +84,23 @@ class CreateWorkout extends React.Component {
     this.setState({ workout })
   }
 
-  handleChange = (event, target) => {
+  handleAddExercises = () => {
     const { workout } = this.state
-    workout[target][event.target.name] = event.target.value
+    const body = { exercise: {}, repeats: 0, measurement: 0, order: workout.length }
+    workout.push(body)
     this.setState({ workout })
   }
 
-  handleClickUp = target => {
+  handleClickUp = (target) => {
     const { workout } = this.state
-    if (target !== 0) {
-      const newWorkout = workout.map((workoutExercise, index) => {
-        if (index === target - 1) {
-          workoutExercise.order += 1
-        }
-        if (index === target) {
-          workoutExercise.order -= 1
-        }
-        return workoutExercise
-      })
-      this.setState({ workout: newWorkout })
-    } else {
-      const newWorkout = workout.map((workoutExercise, index) => {
-        if (index > target) {
-          workoutExercise.order -= 1
-        }
-        if (index === target) {
-          workoutExercise.order = workout.length - 1
-        }
-        return workoutExercise
-      })
-      this.setState({ workout: newWorkout })
-    }
+    const newWorkout = handleClickUp(target, workout)
+    this.setState({ workout: newWorkout })
   }
 
-  handleClickDown = target => {
+  handleClickDown = (target) => {
     const { workout } = this.state
-    if (target !== workout.length - 1) {
-      const newWorkout = workout.map((workoutExercise, index) => {
-        if (index === target + 1) {
-          workoutExercise.order -= 1
-        }
-        if (index === target) {
-          workoutExercise.order += 1
-        }
-        return workoutExercise
-      })
-      this.setState({ workout: newWorkout })
-    } else {
-      const newWorkout = workout.map((workoutExercise, index) => {
-        if (index < target) {
-          workoutExercise.order += 1
-        }
-        if (index === target) {
-          workoutExercise.order = 0
-        }
-        return workoutExercise
-      })
-      this.setState({ workout: newWorkout })
-    }
-  }
-
-  handleCloseDialog = () => {
-    this.setState({ openDialog: false, indexToRemove: null })
-  }
-
-  handleCloseSnackbar = () => {
-    this.setState({ openSnackbar: false, snackbarMessage: '' })
+    const newWorkout = handleClickDown(target, workout)
+    this.setState({ workout: newWorkout })
   }
 
   handleClickRemove = target => {
@@ -162,39 +119,49 @@ class CreateWorkout extends React.Component {
     this.setState({ workout: newWorkout, openDialog: false })
   }
 
+  handleCloseDialog = () => {
+    this.setState({ openDialog: false, indexToRemove: null })
+  }
+
+  handleCloseSnackbar = () => {
+    this.setState({ openSnackbar: false, snackbarMessage: '' })
+  }
+
   handleSubmit = async () => {
-    const { workout } = this.state
+    const { workout, isMounted } = this.state
     const { dispatch, match } = this.props
-    // replace exercise objects with their id-s
-    let newWorkout
-    if (workout) {
-      newWorkout = workout.map(workoutExercise => ({
-        ...workoutExercise, exercise: workoutExercise.exercise._id,
-      }))
-    } else {
-      newWorkout = []
-    }
-    // VALIDATION
-    const errors = await validateWorkout(newWorkout)
-    // Add property 'errors' to the workout
-    const workoutWithErrors = workout.map((workoutExercise, index) => {
-      const errorsValidation = {}
-      errors.forEach(err => {
-        if (err.path[0] === index) {
-          errorsValidation[err.path[1]] = err.message
-        }
+    if (isMounted) {
+      // replace exercise objects with their id-s
+      let newWorkout
+      if (workout) {
+        newWorkout = workout.map(workoutExercise => ({
+          ...workoutExercise, exercise: workoutExercise.exercise._id,
+        }))
+      } else {
+        newWorkout = []
+      }
+      // VALIDATION
+      const errors = await validateWorkout(newWorkout)
+      // Add property 'errors' to the workout
+      const workoutWithErrors = workout.map((workoutExercise, index) => {
+        const errorsValidation = {}
+        errors.forEach(err => {
+          if (err.path[0] === index) {
+            errorsValidation[err.path[1]] = err.message
+          }
+        })
+        workoutExercise.errors = errorsValidation
+        return workoutExercise
       })
-      workoutExercise.errors = errorsValidation
-      return workoutExercise
-    })
-    this.setState({ workout: workoutWithErrors })
-    // Dispatch action if workout is valid
-    if (errors.length === 0) dispatch(createWorkout(newWorkout, match.params.date))
-    this.setState({
-      openSnackbar: true,
-      snackbarMessage: errors.length > 0 ? 'Validation error' : '',
-    })
-    setTimeout(() => this.setState({ openSnackbar: false }), 6000)
+      this.setState({ workout: workoutWithErrors })
+      // Dispatch action if workout is valid
+      if (errors.length === 0) dispatch(createWorkout(newWorkout, match.params.date))
+      this.setState({
+        openSnackbar: true,
+        snackbarMessage: errors.length > 0 ? 'Validation error' : '',
+      })
+      setTimeout(() => this.setState({ openSnackbar: false }), 6000)
+    }
   }
 
   render() {
