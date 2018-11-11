@@ -99,7 +99,7 @@ class EditExercises extends React.Component {
     const { dispatch } = this.props
     if (isMounted) {
       dispatch(updateExercises(exercises))
-      this.setState({ openSnackbar: true })
+      this.setState({ openSnackbar: true, deleted: false })
       setTimeout(() => this.setState({ openSnackbar: false }), 6000)
     }
   }

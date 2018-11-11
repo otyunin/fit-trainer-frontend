@@ -158,6 +158,7 @@ class EditWorkout extends React.Component {
       if (errors.length === 0) dispatch(updateWorkout(workout, match.params.date))
       this.setState({
         openSnackbar: true,
+        deleted: false,
         snackbarMessage: errors.length > 0 ? 'Validation error' : '',
       })
       setTimeout(() => this.setState({ openSnackbar: false }), 6000)
