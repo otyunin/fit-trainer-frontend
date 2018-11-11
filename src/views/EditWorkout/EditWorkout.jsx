@@ -32,6 +32,7 @@ import { getExercises } from 'redux/actions/exercises.action'
 import { deleteWorkout, getWorkout, updateWorkout } from 'redux/actions/workout.action'
 import moment from 'moment'
 import validateWorkout from 'utils/validateWorkout'
+import _ from 'lodash'
 
 class EditWorkout extends React.Component {
   state = {
@@ -246,7 +247,7 @@ class EditWorkout extends React.Component {
                           id="exercise"
                           key={index}
                           selectData={!exercises ? [] : exercises.map(exercise => exercise)}
-                          value={workoutExercise.exercise._id}
+                          value={_.isEmpty(workoutExercise.exercise) ? '' : workoutExercise.exercise._id}
                           showKey="name"
                           returnKey="_id"
                           helperText={workoutExercise.errors ? workoutExercise.errors.exercise : ''}
@@ -295,7 +296,7 @@ class EditWorkout extends React.Component {
                           }}
                         />,
                         <FormLabel>
-                          {workoutExercise.exercise.measurement}
+                          {_.isEmpty(workoutExercise.exercise) ? '' : workoutExercise.exercise.measurement}
                         </FormLabel>,
                         <div>
                           <Button color="info" onClick={() => this.handleClickUp(index)}>
