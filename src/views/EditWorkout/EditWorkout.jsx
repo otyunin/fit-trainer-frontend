@@ -29,7 +29,7 @@ import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/create
 import { connect } from 'react-redux'
 import { push } from 'connected-react-router'
 import { getExercises } from 'redux/actions/exercises.action'
-import { deleteWorkout, getWorkout, updateWorkout } from 'redux/actions/workout.action'
+import { deleteWorkout, deleteWorkoutExercise, getWorkout, updateWorkout } from 'redux/actions/workout.action'
 import moment from 'moment'
 import validateWorkout from 'utils/validateWorkout'
 import _ from 'lodash'
@@ -51,7 +51,6 @@ class EditWorkout extends React.Component {
       indexToRemove: null,
       removeWorkout: false,
       isMounted: false,
-      deleted: false,
     }
   }
 
@@ -118,13 +117,15 @@ class EditWorkout extends React.Component {
       const newWorkout = workoutExercises.map((workoutExercise, index) => {
         if (index > indexToRemove) {
           workoutExercise.order -= 1
+        } else if (index === indexToRemove) {
+          if (workoutExercise._id) {
+            dispatch(deleteWorkoutExercise(match.params.date, workoutExercise._id))
+          }
         }
         return workoutExercise
       })
       newWorkout.splice(indexToRemove, 1)
-      this.setState({ workoutExercises: newWorkout, openDialog: false, openSnackbar: true, deleted: true })
-      setTimeout(() => this.setState({ openSnackbar: false }), 6000)
-      setTimeout(() => this.setState({ deleted: false }), 6500)
+      this.setState({ workoutExercises: newWorkout, openDialog: false })
     } else {
       dispatch(deleteWorkout(match.params.date))
       this.setState({ openDialog: false })
@@ -158,7 +159,6 @@ class EditWorkout extends React.Component {
       if (errors.length === 0) dispatch(updateWorkout(workout, match.params.date))
       this.setState({
         openSnackbar: true,
-        deleted: false,
         snackbarMessage: errors.length > 0 ? 'Validation error' : '',
       })
       setTimeout(() => this.setState({ openSnackbar: false }), 6000)
@@ -173,7 +173,6 @@ class EditWorkout extends React.Component {
       openSnackbar,
       snackbarMessage,
       removeWorkout,
-      deleted,
     } = this.state
 
     return (
@@ -306,10 +305,9 @@ class EditWorkout extends React.Component {
           </Dialog>
           <Snackbar
             place="tc"
-            color={error || snackbarMessage ? 'danger' : (deleted ? 'info' : 'success')}
+            color={error || snackbarMessage ? 'danger' : 'success'}
             icon={error || snackbarMessage ? ErrorOutline : CheckCircleOutline}
-            message={deleted ? 'Click \'Update workout\' to apply the changes' : (
-              snackbarMessage || error || 'Workout successfully updated!')}
+            message={snackbarMessage || error || 'Workout successfully updated!'}
             open={openSnackbar}
             closeNotification={this.handleCloseSnackbar}
             close

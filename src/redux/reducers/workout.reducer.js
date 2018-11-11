@@ -14,6 +14,9 @@ import {
   DELETE_WORKOUT_PENDING,
   DELETE_WORKOUT_REJECTED,
   DELETE_WORKOUT_FULFILLED,
+  DELETE_WORKOUT_EXERCISE_PENDING,
+  DELETE_WORKOUT_EXERCISE_REJECTED,
+  DELETE_WORKOUT_EXERCISE_FULFILLED,
 } from '../actions'
 
 const initialState = {
@@ -113,6 +116,7 @@ const workout = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: null,
+        workout: payload.workout,
         loading: false,
       }
     }
@@ -137,6 +141,28 @@ const workout = (state = initialState, { type, payload }) => {
         ...state,
         error: null,
         successDelete: true,
+        loading: false,
+      }
+    }
+    // DELETE EXERCISE
+    case DELETE_WORKOUT_EXERCISE_PENDING:
+      return {
+        ...state,
+        successDelete: false,
+        loading: true,
+      }
+
+    case DELETE_WORKOUT_EXERCISE_REJECTED:
+      return {
+        ...state,
+        error: payload.message,
+        loading: false,
+      }
+
+    case DELETE_WORKOUT_EXERCISE_FULFILLED: {
+      return {
+        ...state,
+        error: null,
         loading: false,
       }
     }
