@@ -39,6 +39,8 @@ class CreateWorkout extends React.Component {
   constructor(props) {
     super(props)
     this.addExercises = addExercises.bind(this)
+    this.handleClickUp = handleClickUp.bind(this)
+    this.handleClickDown = handleClickDown.bind(this)
     this.state = {
       exercises: [],
       workoutExercises: [],
@@ -86,18 +88,6 @@ class CreateWorkout extends React.Component {
     const { workoutExercises, exercises } = this.state
     workoutExercises[target].exercise = exercises.find(exercise => exercise._id === event.target.value)
     this.setState({ workoutExercises })
-  }
-
-  handleClickUp = (target) => {
-    const { workoutExercises } = this.state
-    const newWorkout = handleClickUp(target, workoutExercises)
-    this.setState({ workoutExercises: newWorkout })
-  }
-
-  handleClickDown = (target) => {
-    const { workoutExercises } = this.state
-    const newWorkout = handleClickDown(target, workoutExercises)
-    this.setState({ workoutExercises: newWorkout })
   }
 
   handleClickRemove = target => {

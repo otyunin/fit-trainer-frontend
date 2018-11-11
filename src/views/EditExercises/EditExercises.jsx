@@ -30,12 +30,17 @@ import { getExercises, updateExercises } from 'redux/actions/exercises.action'
 import { handleClickDown, handleClickUp } from 'utils/movement'
 
 class EditExercises extends React.Component {
-  state = {
-    exercises: [],
-    openDialog: false,
-    openSnackbar: false,
-    indexToRemove: null,
-    isMounted: false,
+  constructor(props) {
+    super(props)
+    this.handleClickUp = handleClickUp.bind(this)
+    this.handleClickDown = handleClickDown.bind(this)
+    this.state = {
+      exercises: [],
+      openDialog: false,
+      openSnackbar: false,
+      indexToRemove: null,
+      isMounted: false,
+    }
   }
 
   componentDidMount() {
@@ -59,18 +64,6 @@ class EditExercises extends React.Component {
     const { exercises } = this.state
     exercises[target][event.target.name] = event.target.value
     this.setState(exercises)
-  }
-
-  handleClickUp = (target) => {
-    const { exercises } = this.state
-    const newExercises = handleClickUp(target, exercises)
-    this.setState({ exercises: newExercises })
-  }
-
-  handleClickDown = (target) => {
-    const { exercises } = this.state
-    const newExercises = handleClickDown(target, exercises)
-    this.setState({ exercises: newExercises })
   }
 
   handleClickRemove = target => {

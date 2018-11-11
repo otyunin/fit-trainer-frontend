@@ -34,12 +34,14 @@ import moment from 'moment'
 import validateWorkout from 'utils/validateWorkout'
 import _ from 'lodash'
 import { getAbbreviation } from 'utils/measurements'
-import { handleClickDown, handleClickUp, addExercises } from 'utils/movement'
+import { addExercises, handleClickDown, handleClickUp } from 'utils/movement'
 
 class EditWorkout extends React.Component {
   constructor(props) {
     super(props)
     this.addExercises = addExercises.bind(this)
+    this.handleClickUp = handleClickUp.bind(this)
+    this.handleClickDown = handleClickDown.bind(this)
     this.state = {
       workout: {},
       workoutExercises: [],
@@ -90,18 +92,6 @@ class EditWorkout extends React.Component {
     const { workoutExercises } = this.state
     workoutExercises[target][event.target.name] = event.target.value
     this.setState({ workoutExercises })
-  }
-
-  handleClickUp = (target) => {
-    const { workoutExercises } = this.state
-    const newWorkout = handleClickUp(target, workoutExercises)
-    this.setState({ workoutExercises: newWorkout })
-  }
-
-  handleClickDown = (target) => {
-    const { workoutExercises } = this.state
-    const newWorkout = handleClickDown(target, workoutExercises)
-    this.setState({ workoutExercises: newWorkout })
   }
 
   handleCloseDialog = () => {
@@ -261,7 +251,8 @@ class EditWorkout extends React.Component {
                           }}
                         />,
                         <FormLabel>
-                          {getAbbreviation(workoutExercise.exercise.measurement)}
+                          {!_.isEmpty(workoutExercise.exercise)
+                          && getAbbreviation(workoutExercise.exercise.measurement)}
                         </FormLabel>,
                         <div>
                           <Button color="info" onClick={() => this.handleClickUp(index)}>
