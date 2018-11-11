@@ -24,6 +24,7 @@ import CustomInput from 'components/CustomInput/CustomInput'
 import Snackbar from 'components/Snackbar/Snackbar'
 
 import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/createWorkoutStyle'
+import { measurements } from 'utils/measurements'
 import { connect } from 'react-redux'
 import { getExercises, updateExercises } from 'redux/actions/exercises.action'
 
@@ -171,7 +172,7 @@ class EditExercises extends React.Component {
                         labelText="Measurement type"
                         id="measurement-type"
                         value={exercise.measurement}
-                        selectData={['kilograms', 'grams', 'seconds', 'hours', 'metres', 'kilometers']}
+                        selectData={measurements.map(measurement => measurement.type)}
                         inputProps={{
                           name: 'measurement',
                           onChange: (event) => this.handleChange(event, index),

@@ -33,6 +33,7 @@ import { deleteWorkout, getWorkout, updateWorkout } from 'redux/actions/workout.
 import moment from 'moment'
 import validateWorkout from 'utils/validateWorkout'
 import _ from 'lodash'
+import { getAbbreviation } from '../../utils/measurements'
 
 class EditWorkout extends React.Component {
   state = {
@@ -296,7 +297,7 @@ class EditWorkout extends React.Component {
                           }}
                         />,
                         <FormLabel>
-                          {_.isEmpty(workoutExercise.exercise) ? '' : workoutExercise.exercise.measurement}
+                          {getAbbreviation(workoutExercise.exercise.measurement)}
                         </FormLabel>,
                         <div>
                           <Button color="info" onClick={() => this.handleClickUp(index)}>

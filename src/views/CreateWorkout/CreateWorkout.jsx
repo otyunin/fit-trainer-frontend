@@ -26,6 +26,7 @@ import CustomInput from 'components/CustomInput/CustomInput'
 import Snackbar from 'components/Snackbar/Snackbar'
 
 import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/createWorkoutStyle'
+import { getAbbreviation } from 'utils/measurements'
 import { connect } from 'react-redux'
 import { getExercises } from 'redux/actions/exercises.action'
 import moment from 'moment'
@@ -279,7 +280,7 @@ class CreateWorkout extends React.Component {
                           }}
                         />,
                         <FormLabel>
-                          {workoutExercises.exercise.measurement}
+                          {getAbbreviation(workoutExercises.exercise.measurement)}
                         </FormLabel>,
                         <div>
                           <Button color="info" onClick={() => this.handleClickUp(index)}>
