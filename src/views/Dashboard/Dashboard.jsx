@@ -80,7 +80,7 @@ class Dashboard extends React.Component {
                   <span>click to edit the created workout</span>
                 </Grid>
                 <Grid container alignItems="center">
-                  <FiberManualRecord style={{ color: '#559fff' }} className={classes.legendIcon} />
+                  <FiberManualRecord style={{ color: '#00dbfc' }} className={classes.legendIcon} />
                   <span>select a date and click &#34;Add new workout&#34;</span>
                 </Grid>
               </GridContainer>
