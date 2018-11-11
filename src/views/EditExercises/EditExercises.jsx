@@ -52,7 +52,7 @@ class EditExercises extends React.Component {
   }
 
   componentWillUnmount() {
-    this.setState({ isMounted: true })
+    this.setState({ isMounted: false })
   }
 
   handleChange = (event, target) => {

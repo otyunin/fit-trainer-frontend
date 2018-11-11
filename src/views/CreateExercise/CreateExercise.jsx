@@ -28,7 +28,7 @@ class CreateExercise extends React.Component {
   }
 
   componentWillUnmount() {
-    this.setState({ isMounted: true })
+    this.setState({ isMounted: false })
   }
 
   handleSubmit = event => {

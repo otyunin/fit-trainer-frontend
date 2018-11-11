@@ -49,3 +49,10 @@ export const handleClickDown = (target, array) => {
   })
   return newArray
 }
+
+export function addExercises() {
+  const { workoutExercises } = this.state
+  const body = { exercise: {}, repeats: 0, measurement: 0, order: workoutExercises.length }
+  workoutExercises.push(body)
+  this.setState({ workoutExercises })
+}

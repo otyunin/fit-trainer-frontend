@@ -34,18 +34,22 @@ import moment from 'moment'
 import validateWorkout from 'utils/validateWorkout'
 import _ from 'lodash'
 import { getAbbreviation } from 'utils/measurements'
-import { handleClickDown, handleClickUp } from 'utils/movement'
+import { handleClickDown, handleClickUp, addExercises } from 'utils/movement'
 
 class EditWorkout extends React.Component {
-  state = {
-    workout: {},
-    workoutExercises: [],
-    openDialog: false,
-    openSnackbar: false,
-    snackbarMessage: '',
-    indexToRemove: null,
-    removeWorkout: false,
-    isMounted: false,
+  constructor(props) {
+    super(props)
+    this.addExercises = addExercises.bind(this)
+    this.state = {
+      workout: {},
+      workoutExercises: [],
+      openDialog: false,
+      openSnackbar: false,
+      snackbarMessage: '',
+      indexToRemove: null,
+      removeWorkout: false,
+      isMounted: false,
+    }
   }
 
   componentDidMount() {
@@ -72,14 +76,7 @@ class EditWorkout extends React.Component {
   }
 
   componentWillUnmount() {
-    this.setState({ isMounted: true })
-  }
-
-  handleAddExercises = () => {
-    const { workoutExercises } = this.state
-    const body = { exercise: {}, repeats: 0, measurement: 0, order: workoutExercises.length }
-    workoutExercises.push(body)
-    this.setState({ workoutExercises })
+    this.setState({ isMounted: false })
   }
 
   handleChangeSelect = (event, target) => {
@@ -204,7 +201,7 @@ class EditWorkout extends React.Component {
               </CardHeader>
               <CardBody>
                 <Grid container>
-                  <Button color="primary" onClick={this.handleAddExercises}>Add exercise</Button>
+                  <Button color="primary" onClick={this.addExercises}>Add exercise</Button>
                 </Grid>
                 <Grid container alignItems="center">
                   <Table
