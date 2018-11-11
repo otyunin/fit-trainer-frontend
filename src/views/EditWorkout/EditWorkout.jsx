@@ -201,7 +201,8 @@ class EditWorkout extends React.Component {
                           labelText="Exercise name"
                           id="exercise"
                           key={index}
-                          selectData={!exercises ? [] : exercises.map(exercise => exercise)}
+                          selectData={!exercises ? [] : exercises.sort((a, b) => a.order - b.order)
+                            .map(exercise => exercise)}
                           value={_.isEmpty(workoutExercise.exercise) ? '' : workoutExercise.exercise._id}
                           showKey="name"
                           returnKey="_id"

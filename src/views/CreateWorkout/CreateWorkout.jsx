@@ -33,7 +33,7 @@ import moment from 'moment'
 import { createWorkout } from 'redux/actions/workout.action'
 import { push } from 'connected-react-router'
 import validateWorkout from 'utils/validateWorkout'
-import { handleClickDown, handleClickUp, addExercises } from 'utils/movement'
+import { addExercises, handleClickDown, handleClickUp } from 'utils/movement'
 
 class CreateWorkout extends React.Component {
   constructor(props) {
@@ -184,7 +184,8 @@ class CreateWorkout extends React.Component {
                           labelText="Exercise name"
                           id="exercise"
                           key={index}
-                          selectData={!exercises ? [] : exercises.map(exercise => exercise)}
+                          selectData={!exercises ? [] : exercises.sort((a, b) => a.order - b.order)
+                            .map(exercise => exercise)}
                           value={workoutExercise.exercise._id}
                           showKey="name"
                           returnKey="_id"
