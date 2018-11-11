@@ -8,11 +8,11 @@ Internship project at InCode Group.
 2. Srart the front-end:
 
      
-     $ git clone https://github.com/otyunin/fir-trainer-frontend.git
-     $ cd fit-trainer-frontend
-     $ npm install
-     $ npm run start
- Go to [http://localhost:3000/](http://localhost:3000/)
+        $ git clone https://github.com/otyunin/fir-trainer-frontend.git
+        $ cd fit-trainer-frontend
+        $ npm install
+        $ npm run start     
+        Go to [http://localhost:3000/](http://localhost:3000/)
 
 ## If the port is occupied by another proces
 
