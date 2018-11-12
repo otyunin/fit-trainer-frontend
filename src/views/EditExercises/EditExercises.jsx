@@ -29,6 +29,7 @@ import { measurements } from 'utils/measurements'
 import { connect } from 'react-redux'
 import { getExercises, updateExercises } from 'redux/actions/exercises.action'
 import { handleClickDown, handleClickUp } from 'utils/movement'
+import { deleteExercise } from '../../redux/actions/exercises.action'
 
 class EditExercises extends React.Component {
   constructor(props) {
@@ -41,7 +42,6 @@ class EditExercises extends React.Component {
       openSnackbar: false,
       indexToRemove: null,
       isMounted: false,
-      deleted: false,
     }
   }
 
@@ -73,17 +73,18 @@ class EditExercises extends React.Component {
   }
 
   handleApplyDeletion = () => {
+    const { dispatch } = this.props
     const { exercises, indexToRemove } = this.state
     const newExercises = exercises.map((exercise, index) => {
       if (index > indexToRemove) {
         exercise.order -= 1
+      } else if (index === indexToRemove) {
+        dispatch(deleteExercise(exercise._id))
       }
       return exercise
     })
     newExercises.splice(indexToRemove, 1)
-    this.setState({ exercises: newExercises, openDialog: false, openSnackbar: true, deleted: true })
-    setTimeout(() => this.setState({ openSnackbar: false }), 6000)
-    setTimeout(() => this.setState({ deleted: false }), 6500)
+    this.setState({ exercises: newExercises, openDialog: false })
   }
 
   handleCloseDialog = () => {
@@ -99,14 +100,14 @@ class EditExercises extends React.Component {
     const { dispatch } = this.props
     if (isMounted) {
       dispatch(updateExercises(exercises))
-      this.setState({ openSnackbar: true, deleted: false })
+      this.setState({ openSnackbar: true })
       setTimeout(() => this.setState({ openSnackbar: false }), 6000)
     }
   }
 
   render() {
     const { classes, error } = this.props
-    const { openDialog, exercises, openSnackbar, deleted } = this.state
+    const { openDialog, exercises, openSnackbar } = this.state
     return (
       <div>
         <GridContainer>
@@ -191,10 +192,9 @@ class EditExercises extends React.Component {
         </Dialog>
         <Snackbar
           place="tc"
-          color={error ? 'danger' : (deleted ? 'info' : 'success')}
+          color={error ? 'danger' : 'success'}
           icon={error ? ErrorOutline : CheckCircleOutline}
-          message={deleted ? 'Click \'Update exercises\' to apply the changes' : (
-            error || 'Exercises successfully updated!')}
+          message={error || 'Exercises successfully updated!'}
           open={openSnackbar}
           closeNotification={this.handleCloseSnackbar}
           close
