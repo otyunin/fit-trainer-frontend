@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React from 'react'
 import PropTypes from 'prop-types'
 // @material-ui/core
@@ -28,6 +29,7 @@ import { measurements } from 'utils/measurements'
 import { connect } from 'react-redux'
 import { getExercises, updateExercises } from 'redux/actions/exercises.action'
 import { handleClickDown, handleClickUp } from 'utils/movement'
+import { deleteExercise } from '../../redux/actions/exercises.action'
 
 class EditExercises extends React.Component {
   constructor(props) {
@@ -71,10 +73,13 @@ class EditExercises extends React.Component {
   }
 
   handleApplyDeletion = () => {
+    const { dispatch } = this.props
     const { exercises, indexToRemove } = this.state
     const newExercises = exercises.map((exercise, index) => {
       if (index > indexToRemove) {
         exercise.order -= 1
+      } else if (index === indexToRemove) {
+        dispatch(deleteExercise(exercise._id))
       }
       return exercise
     })
@@ -174,6 +179,7 @@ class EditExercises extends React.Component {
             <DialogContentText id="dialog-description">
               Do you really want to delete the exercise?
             </DialogContentText>
+            <p style={{ color: '#f44336' }}>It will be removed in all workouts.</p>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleCloseDialog} color="transparent">

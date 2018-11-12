@@ -24,16 +24,17 @@ import Table from 'components/Table/Table'
 import CustomSelect from 'components/CustomSelect/CustomSelect'
 import CustomInput from 'components/CustomInput/CustomInput'
 import Snackbar from 'components/Snackbar/Snackbar'
+import Danger from 'components/Typography/Danger'
 
 import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/createWorkoutStyle'
 import { getAbbreviation } from 'utils/measurements'
 import { connect } from 'react-redux'
 import { getExercises } from 'redux/actions/exercises.action'
 import moment from 'moment'
-import { createWorkout } from 'redux/actions/workout.action'
+import { createWorkout, getWorkoutDates } from 'redux/actions/workout.action'
 import { push } from 'connected-react-router'
 import validateWorkout from 'utils/validateWorkout'
-import { handleClickDown, handleClickUp, addExercises } from 'utils/movement'
+import { addExercises, handleClickDown, handleClickUp } from 'utils/movement'
 
 class CreateWorkout extends React.Component {
   constructor(props) {
@@ -56,6 +57,7 @@ class CreateWorkout extends React.Component {
     const { dispatch, match } = this.props
     dispatch(getExercises(match.params.date))
     this.setState({ isMounted: true })
+    dispatch(getWorkoutDates())
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -152,8 +154,9 @@ class CreateWorkout extends React.Component {
   }
 
   render() {
-    const { classes, exercises, error, match } = this.props
+    const { classes, exercises, error, match, dates } = this.props
     const { workoutExercises, openDialog, openSnackbar, snackbarMessage } = this.state
+    const isCreated = dates.indexOf(moment.utc(match.params.date, 'YYYY-MM-DD').toISOString()) > -1
     return (
       <div>
         <GridContainer>
@@ -174,85 +177,96 @@ class CreateWorkout extends React.Component {
               </CardHeader>
               <CardBody>
                 <Grid container>
-                  <Button color="primary" onClick={this.addExercises}>Add exercise</Button>
+                  <Button color="primary" onClick={this.addExercises} disabled={isCreated}>
+                    Add exercise
+                  </Button>
                 </Grid>
-                <Grid container alignItems="center">
-                  <Table
-                    tableData={workoutExercises.sort((a, b) => a.order - b.order)
-                      .map((workoutExercise, index) => [
-                        <CustomSelect
-                          labelText="Exercise name"
-                          id="exercise"
-                          key={index}
-                          selectData={!exercises ? [] : exercises.map(exercise => exercise)}
-                          value={workoutExercise.exercise._id}
-                          showKey="name"
-                          returnKey="_id"
-                          helperText={workoutExercise.errors ? workoutExercise.errors.exercise : ''}
-                          inputProps={{
-                            name: 'exercise',
-                            onChange: (event) => this.handleChangeSelect(event, index),
-                            renderValue: () => workoutExercise.exercise.name,
-                          }}
-                          labelProps={{ shrink: true }}
-                          formControlProps={{
-                            fullWidth: true,
-                            error: workoutExercise.errors && !!workoutExercise.errors.exercise,
-                          }}
-                        />,
-                        <CustomInput
-                          labelText="Repeats"
-                          id="repeats"
-                          key={index}
-                          helperText={workoutExercise.errors ? workoutExercise.errors.repeats : ''}
-                          formControlProps={{
-                            fullWidth: true,
-                            error: workoutExercise.errors && !!workoutExercise.errors.repeats,
-                          }}
-                          inputProps={{
-                            name: 'repeats',
-                            type: 'number',
-                            value: workoutExercise.repeats,
-                            onChange: (event) => this.handleChange(event, index),
-                          }}
-                        />,
-                        <CustomInput
-                          labelText="Measurement"
-                          id="measurement"
-                          key={index}
-                          helperText={workoutExercise.errors ? workoutExercise.errors.measurement : ''}
-                          formControlProps={{
-                            fullWidth: true,
-                            value: workoutExercise.measurement,
-                            error: workoutExercise.errors && !!workoutExercise.errors.measurement,
-                          }}
-                          inputProps={{
-                            name: 'measurement',
-                            type: 'number',
-                            value: workoutExercise.measurement,
-                            onChange: (event) => this.handleChange(event, index),
-                          }}
-                        />,
-                        <FormLabel>
-                          {getAbbreviation(workoutExercise.exercise.measurement)}
-                        </FormLabel>,
-                        <div>
-                          <Button color="info" onClick={() => this.handleClickUp(index)}>
-                            <ArrowUpward />
-                          </Button>
-                          <Button color="info" onClick={() => this.handleClickDown(index)}>
-                            <ArrowDownward />
-                          </Button>
-                          <Button color="warning" onClick={() => this.handleClickRemove(index)}>
-                            <Cancel />
-                          </Button>
-                        </div>,
-                      ])}
-                  />
-                </Grid>
+                {isCreated ? (
+                  <Grid container justify="center" style={{ marginTop: 15 }}>
+                    <Danger className={classes.dangerText}>
+                      Workout has already been created.
+                    </Danger>
+                  </Grid>
+                ) : (
+                  <Grid container alignItems="center">
+                    <Table
+                      tableData={workoutExercises.sort((a, b) => a.order - b.order)
+                        .map((workoutExercise, index) => [
+                          <CustomSelect
+                            labelText="Exercise name"
+                            id="exercise"
+                            key={index}
+                            selectData={!exercises ? [] : exercises.sort((a, b) => a.order - b.order)
+                              .map(exercise => exercise)}
+                            value={workoutExercise.exercise._id}
+                            showKey="name"
+                            returnKey="_id"
+                            helperText={workoutExercise.errors ? workoutExercise.errors.exercise : ''}
+                            inputProps={{
+                              name: 'exercise',
+                              onChange: (event) => this.handleChangeSelect(event, index),
+                              renderValue: () => workoutExercise.exercise.name,
+                            }}
+                            labelProps={{ shrink: true }}
+                            formControlProps={{
+                              fullWidth: true,
+                              error: workoutExercise.errors && !!workoutExercise.errors.exercise,
+                            }}
+                          />,
+                          <CustomInput
+                            labelText="Repeats"
+                            id="repeats"
+                            key={index}
+                            helperText={workoutExercise.errors ? workoutExercise.errors.repeats : ''}
+                            formControlProps={{
+                              fullWidth: true,
+                              error: workoutExercise.errors && !!workoutExercise.errors.repeats,
+                            }}
+                            inputProps={{
+                              name: 'repeats',
+                              type: 'number',
+                              value: workoutExercise.repeats,
+                              onChange: (event) => this.handleChange(event, index),
+                            }}
+                          />,
+                          <CustomInput
+                            labelText="Measurement"
+                            id="measurement"
+                            key={index}
+                            helperText={workoutExercise.errors ? workoutExercise.errors.measurement : ''}
+                            formControlProps={{
+                              fullWidth: true,
+                              value: workoutExercise.measurement,
+                              error: workoutExercise.errors && !!workoutExercise.errors.measurement,
+                            }}
+                            inputProps={{
+                              name: 'measurement',
+                              type: 'number',
+                              value: workoutExercise.measurement,
+                              onChange: (event) => this.handleChange(event, index),
+                            }}
+                          />,
+                          <FormLabel>
+                            {getAbbreviation(workoutExercise.exercise.measurement)}
+                          </FormLabel>,
+                          <div>
+                            <Button color="info" onClick={() => this.handleClickUp(index)}>
+                              <ArrowUpward />
+                            </Button>
+                            <Button color="info" onClick={() => this.handleClickDown(index)}>
+                              <ArrowDownward />
+                            </Button>
+                            <Button color="warning" onClick={() => this.handleClickRemove(index)}>
+                              <Cancel />
+                            </Button>
+                          </div>,
+                        ])}
+                    />
+                  </Grid>
+                )}
               </CardBody>
               <CardFooter>
-                <Button color="primary" onClick={this.handleSubmit}>Create workout</Button>
+                <Button color="primary" onClick={this.handleSubmit} disabled={isCreated}>Create workout</Button>
               </CardFooter>
             </Card>
           </GridItem>
@@ -299,18 +313,21 @@ CreateWorkout.propTypes = {
   dispatch: PropTypes.func.isRequired,
   error: PropTypes.string,
   success: PropTypes.bool,
+  dates: PropTypes.array,
 }
 
 CreateWorkout.defaultProps = {
   exercises: [],
   error: '',
   success: false,
+  dates: [],
 }
 
 const mapStateToProps = store => ({
   exercises: store.exercises.exercises,
   error: store.workout.error,
   success: store.workout.successCreate,
+  dates: store.workout.dates,
 })
 
 export default connect(mapStateToProps)(withStyles(createWorkoutStyle)(CreateWorkout))

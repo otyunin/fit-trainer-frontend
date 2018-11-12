@@ -3,17 +3,19 @@
 Internship project at InCode Group.
  
  ## Getting started
-Start [server](https://github.com/otyunin/fit-trainer-backend.git/)
- 
-     $ git clone https://github.com/otyunin/fir-trainer-frontend.git
-     $ cd fit-trainer-frontend
-     $ npm install
-     $ npm run start
- Go to [http://localhost:3000/](http://localhost:3000/)
 
-## Tips
+1. **First start the [Back-end](https://github.com/otyunin/fit-trainer-backend.git/) and MongoDB!**
+2. Srart the front-end:
 
-If the port is occupied by another process:
+     
+        $ git clone https://github.com/otyunin/fir-trainer-frontend.git
+        $ cd fit-trainer-frontend
+        $ npm install
+        $ npm run start     
+        Go to [http://localhost:3000/](http://localhost:3000/)
+
+## If the port is occupied by another proces
+
 
      On Linux:
          $ fuser -k -n tcp <PortNumber>

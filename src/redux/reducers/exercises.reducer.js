@@ -7,7 +7,7 @@ import {
   GET_EXERCISES_FULFILLED,
   UPDATE_EXERCISES_PENDING,
   UPDATE_EXERCISES_REJECTED,
-  UPDATE_EXERCISES_FULFILLED,
+  UPDATE_EXERCISES_FULFILLED, DELETE_EXERCISE_PENDING, DELETE_EXERCISE_REJECTED, DELETE_EXERCISE_FULFILLED,
 } from '../actions'
 
 const initialState = {
@@ -75,6 +75,27 @@ const exercises = (state = initialState, { type, payload }) => {
       }
 
     case UPDATE_EXERCISES_FULFILLED: {
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case DELETE_EXERCISE_PENDING:
+      return {
+        ...state,
+        loading: true,
+      }
+
+    case DELETE_EXERCISE_REJECTED:
+      return {
+        ...state,
+        error: payload.message,
+        loading: false,
+      }
+
+    case DELETE_EXERCISE_FULFILLED: {
       return {
         ...state,
         error: null,

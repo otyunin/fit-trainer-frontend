@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle,react/jsx-one-expression-per-line */
+/* eslint-disable no-underscore-dangle,react/jsx-one-expression-per-line,no-nested-ternary */
 import React from 'react'
 import PropTypes from 'prop-types'
 // @material-ui/core
@@ -29,7 +29,7 @@ import createWorkoutStyle from 'assets/jss/material-dashboard-react/views/create
 import { connect } from 'react-redux'
 import { push } from 'connected-react-router'
 import { getExercises } from 'redux/actions/exercises.action'
-import { deleteWorkout, getWorkout, updateWorkout } from 'redux/actions/workout.action'
+import { deleteWorkout, deleteWorkoutExercise, getWorkout, updateWorkout } from 'redux/actions/workout.action'
 import moment from 'moment'
 import validateWorkout from 'utils/validateWorkout'
 import _ from 'lodash'
@@ -117,6 +117,10 @@ class EditWorkout extends React.Component {
       const newWorkout = workoutExercises.map((workoutExercise, index) => {
         if (index > indexToRemove) {
           workoutExercise.order -= 1
+        } else if (index === indexToRemove) {
+          if (workoutExercise._id) {
+            dispatch(deleteWorkoutExercise(match.params.date, workoutExercise._id))
+          }
         }
         return workoutExercise
       })
@@ -201,7 +205,8 @@ class EditWorkout extends React.Component {
                           labelText="Exercise name"
                           id="exercise"
                           key={index}
-                          selectData={!exercises ? [] : exercises.map(exercise => exercise)}
+                          selectData={!exercises ? [] : exercises.sort((a, b) => a.order - b.order)
+                            .map(exercise => exercise)}
                           value={_.isEmpty(workoutExercise.exercise) ? '' : workoutExercise.exercise._id}
                           showKey="name"
                           returnKey="_id"

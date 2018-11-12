@@ -1,5 +1,10 @@
 import * as API from '../../api/exercise'
-import { GET_EXERCISES, NEW_EXERCISE, UPDATE_EXERCISES } from './index'
+import {
+  DELETE_EXERCISE,
+  GET_EXERCISES,
+  NEW_EXERCISE,
+  UPDATE_EXERCISES,
+} from './index'
 
 export const createExercise = data => async dispatch => {
   await dispatch({
@@ -19,5 +24,12 @@ export const updateExercises = data => async dispatch => {
   await dispatch({
     type: UPDATE_EXERCISES,
     payload: API.updateExercises(data),
+  })
+}
+
+export const deleteExercise = id => async dispatch => {
+  await dispatch({
+    type: DELETE_EXERCISE,
+    payload: API.deleteExercise(id),
   })
 }

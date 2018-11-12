@@ -51,3 +51,10 @@ export const deleteWorkout = async (date) => {
   if (err) throw error(err)
   if (!res.data.success) throw res.data.message
 }
+
+export const deleteWorkoutExercise = async (date, id) => {
+  const [err, res] = await del(`/workout/${date}/${id}`, config)
+
+  if (err) throw error(err)
+  if (!res.data.success) throw res.data.message
+}
