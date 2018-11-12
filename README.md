@@ -8,7 +8,7 @@ Internship project at InCode Group.
 2. Srart the front-end:
 
      
-        $ git clone https://github.com/otyunin/fir-trainer-frontend.git
+        $ git clone https://github.com/otyunin/fit-trainer-frontend.git
         $ cd fit-trainer-frontend
         $ npm install
         $ npm run start     
