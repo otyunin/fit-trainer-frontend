@@ -27,10 +27,6 @@ const createExerciseStyle = {
   dateIcon: {
     marginRight: 5,
   },
-  progress: {
-    marginLeft: '30px',
-    color: '#9c27b0',
-  },
 }
 
 export default createExerciseStyle

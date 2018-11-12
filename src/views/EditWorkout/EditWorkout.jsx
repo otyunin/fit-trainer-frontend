@@ -35,7 +35,6 @@ import validateWorkout from 'utils/validateWorkout'
 import _ from 'lodash'
 import { getAbbreviation } from 'utils/measurements'
 import { addExercises, handleClickDown, handleClickUp } from 'utils/movement'
-import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress'
 
 class EditWorkout extends React.Component {
   constructor(props) {
@@ -172,8 +171,6 @@ class EditWorkout extends React.Component {
       exercises,
       error,
       match,
-      loadingWorkout,
-      loadingExercises,
     } = this.props
     const {
       workoutExercises,
@@ -204,9 +201,6 @@ class EditWorkout extends React.Component {
               <CardBody>
                 <Grid container>
                   <Button color="primary" onClick={this.addExercises}>Add exercise</Button>
-                  {(loadingWorkout || loadingExercises) && (
-                    <CircularProgress className={classes.progress} />
-                  )}
                 </Grid>
                 <Grid container alignItems="center">
                   <Table
@@ -337,8 +331,6 @@ EditWorkout.propTypes = {
   dispatch: PropTypes.func.isRequired,
   error: PropTypes.string,
   success: PropTypes.bool,
-  loadingWorkout: PropTypes.bool,
-  loadingExercises: PropTypes.bool,
 }
 
 EditWorkout.defaultProps = {
@@ -346,8 +338,6 @@ EditWorkout.defaultProps = {
   workout: {},
   error: '',
   success: false,
-  loadingWorkout: false,
-  loadingExercises: false,
 }
 
 const mapStateToProps = store => ({
@@ -355,8 +345,6 @@ const mapStateToProps = store => ({
   exercises: store.exercises.exercises,
   error: store.workout.error,
   success: store.workout.successDelete,
-  loadingWorkout: store.workout.loading,
-  loadingExercises: store.exercises.loading,
 })
 
 export default connect(mapStateToProps)(withStyles(createWorkoutStyle)(EditWorkout))
